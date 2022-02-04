@@ -1,3 +1,5 @@
+#include "Main_includes.h"
+
 #ifdef main
 #undef main
 #endif

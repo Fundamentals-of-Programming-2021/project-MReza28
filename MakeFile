@@ -1,2 +1,2 @@
 all:
-	gcc -IINCLUDES -IINCLUDES/SDL2/include -LINCLUDES/SDL2/lib -o PLANETS-WARS MAIN/*.c -lSDL2main -lSDL2 -ISDL2_image -lSDL2 -lSDL2_image -ISDL_ttf -lSDL_ttf -ISDL_gfx -ISDL2_gfx -LSDL_gfx -LSDL2_gfx
+	gcc -IINCLUDES -IINCLUDES/SDL2/include -LINCLUDES/SDL2/lib -o PLANETS-WARS PROJECT/*.c -lSDL2main -lSDL2 -lSDL2_image -lSDL_ttf -lSDL2_gfx
