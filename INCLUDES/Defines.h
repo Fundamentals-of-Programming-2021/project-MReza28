@@ -1,9 +1,16 @@
 //Base Defines
+#define PLANET_MAX (10)
+#define NATION_MAX (4)
+
 #define PLANET_MIN_DIS (200)
+#define SPACESHIP_MIN_DIS (5)
+
 #define PLANET_TYPES (1)
 #define SPACESHIP_TYPES (1)
+
 #define PLANET_POPULATION (20)
 #define SPACESHIP_POPUALTON (500)
+
 #define ATTAK_SPEED (6)
 #define POPULATION_SPEED (1)
 
