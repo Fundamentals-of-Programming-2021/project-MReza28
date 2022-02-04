@@ -13,3 +13,7 @@ struct Planet {
 
     int population;
 };
+
+void Planet_alloc (int howmany , struct Planet* planets) {
+    
+}

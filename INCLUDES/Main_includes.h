@@ -7,4 +7,3 @@
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <SDL2/SDL_ttf.h>
-#include "Defines.h"
