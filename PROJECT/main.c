@@ -1,4 +1,5 @@
 #include "Main_includes.h"
+#include "Spaceship.h"
 
 #ifdef main
 #undef main
