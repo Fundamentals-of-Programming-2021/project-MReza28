@@ -5,4 +5,6 @@ struct Nation
 {
     int color;
     int armytexture;
+    int potion;
+    int potiontime;
 };

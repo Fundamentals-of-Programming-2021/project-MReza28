@@ -13,6 +13,7 @@
 
 #define ATTAK_SPEED (6)
 #define POPULATION_SPEED (1)
+#define POPULATION_CAB (50)
 
 //Size Defines
 #define WINDOW_W (1920)

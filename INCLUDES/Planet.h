@@ -4,7 +4,6 @@
 struct Planet {
     int id;
     int nation;
-    int potion;
     SDL_Rect rect;
     
     int x;
@@ -52,7 +51,6 @@ void Planet_alloc (int howmany , struct Planet* planets) {
         //creating white nations
         if(i+1 > howmany) (planets+i)->nation = 0;
         
-        (planets+i)->potion = 0;
         (planets+i)->population = PLANET_POPULATION;
         
         (planets+i)->rect.h = PLANET_H;
