@@ -13,6 +13,7 @@
 
 #define ATTAK_SPEED (4)
 #define POPULATION_SPEED (1)
+#define PLANET_ROTATION_SPEED (0.5)
 #define POPULATION_CAB (50)
 
 //Size Defines

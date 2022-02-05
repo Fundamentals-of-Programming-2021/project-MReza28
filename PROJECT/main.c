@@ -84,7 +84,11 @@ int main (int argc, char *argv[]) {
         if(x.moving)
         Spaceship_movement(&x , rend , tex);
         
-
+        for (int i = 0; i < 10; i++)
+        {
+            Planet_render(&A[i] , rend , tex);
+        }
+        
 
         k++;
         if(k%15 == 0) na->color = 1;
