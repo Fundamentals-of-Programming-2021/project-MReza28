@@ -11,7 +11,7 @@
 #define PLANET_POPULATION (20)
 #define SPACESHIP_POPUALTON (500)
 
-#define ATTAK_SPEED (6)
+#define ATTAK_SPEED (4)
 #define POPULATION_SPEED (1)
 #define POPULATION_CAB (50)
 

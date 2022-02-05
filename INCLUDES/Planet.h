@@ -3,7 +3,7 @@
 
 struct Planet {
     int id;
-    int nation;
+    struct Nation* nation;
     SDL_Rect rect;
     
     int x;
@@ -43,13 +43,13 @@ bool Planet_dis_checker_n (int howmany , struct Planet* A , struct Planet B){
     return true;
 }
 
-void Planet_alloc (int howmany , struct Planet* planets) {
+void Planet_alloc (int howmany , struct Planet* planets , struct Nation* nations) {
     for (int i = 0; i < howmany ; i++)
     {
         (planets+i)->id = i;
-        (planets+i)->nation = i+1;
+        (planets+i)->nation = (nations+i+1);
         //creating white nations
-        if(i+1 > howmany) (planets+i)->nation = 0;
+        if(i+1 > howmany) (planets+i)->nation = nations;
         
         (planets+i)->population = PLANET_POPULATION;
         

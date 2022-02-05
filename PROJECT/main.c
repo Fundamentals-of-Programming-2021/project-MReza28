@@ -6,9 +6,12 @@
 #endif
 
 int main (int argc, char *argv[]) {
+    int k = 0;
+    struct Nation Q[4];
     struct Planet A[10];
     int s[10][10];
-    Planet_alloc(10 , A);
+    
+    Planet_alloc(10 , A , Q);
     Planet_dis_finder_n(10 , A , s);
 
     for (int i = 0; i < 10; i++)
@@ -16,12 +19,17 @@ int main (int argc, char *argv[]) {
         printf("%d %d\n" , A[i].x , A[i].y);
     }
 
-    struct Nation* na;
+    
     struct Spaceship x;
+    struct Nation na[2];
+    na->color = 0;
+
+
+    
     Spaceship_creat(na , &A[0] , &A[1] , &x , s);
     printf("%.2lf" , x.angle);
 
-
+    
 
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0)
     {
@@ -50,9 +58,10 @@ int main (int argc, char *argv[]) {
       return 1;
     }
 
-    SDL_Surface *texx = IMG_Load("IMAGES/a.png");
-    SDL_Texture *tex = SDL_CreateTextureFromSurface(rend , texx);
+    SDL_Surface *texx[2] = {IMG_Load("IMAGES/a.png") , IMG_Load("IMAGES/b.png")};
+    SDL_Texture *tex[2] = {SDL_CreateTextureFromSurface(rend , texx[0]) , SDL_CreateTextureFromSurface(rend , texx[1])};
 
+    
     
     int close_requested = 0;
     while (!close_requested)
@@ -70,19 +79,24 @@ int main (int argc, char *argv[]) {
         // clear the window
         SDL_RenderClear(rend);
         
-        Spaceship_movement(&x);
         x.rect.w = 24;
         x.rect.h = 24;
-        SDL_RenderCopyEx(rend , tex , NULL , &(x.rect) , x.angle , NULL , SDL_FLIP_NONE);
+        if(x.moving)
+        Spaceship_movement(&x , rend , tex);
+        
+
+
+        k++;
+        if(k%15 == 0) na->color = 1;
+        if(k%30 == 0) na->color = 0;
 
         SDL_RenderPresent(rend);
-
         // wait 1/60th of a second
         SDL_Delay(1000/60);
     }
 
-
-
+    SDL_DestroyTexture(*(tex));
+    SDL_DestroyTexture(*(tex+1));
     SDL_DestroyRenderer(rend);
     SDL_DestroyWindow(win);
     SDL_Quit();
