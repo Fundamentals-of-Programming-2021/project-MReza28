@@ -20,7 +20,7 @@ struct Spaceship {
 };
 
 void Spaceship_alloc (struct Spaceship* spaceships) {
-    for (int  i = 0; i < SPACESHIP_POPUALTON; i++)
+    for (int  i = 0; i < SPACESHIP_MAX; i++)
     {
         (spaceships+i)->rect.h = SPACESHIP_H;
         (spaceships+i)->rect.w = SPACESHIP_W;
@@ -70,5 +70,11 @@ void Spaceship_movement (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Te
                 (obj->end->population)--;
             }
         }
+    }
+}
+
+void Spaceship_render (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Texture **spaceshiptextures){
+    if(obj->moving){
+        Spaceship_movement(obj , renderer , spaceshiptextures);
     }
 }

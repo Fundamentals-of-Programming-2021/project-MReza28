@@ -44,21 +44,27 @@ bool Planet_dis_checker_n (int howmany , struct Planet* A , struct Planet B){
     return true;
 }
 
-void Planet_alloc (int howmany , struct Planet* planets , struct Nation* nations) {
+void Planet_alloc (int howmanyplayable , int howmanynations , int howmanyvoidplanets , struct Planet* planets , struct Nation* nations) {
     srand(time(0));
-    for (int i = 0; i < howmany ; i++)
+    for (int i = 0; i < howmanyplayable + howmanyvoidplanets ; i++)
     {
         (planets+i)->id = i;
-        (planets+i)->nation = (nations+i+1);
-        //creating white nations
-        if(i+1 > howmany) (planets+i)->nation = nations;
         
+        //creating white planets and void planets
+        if(i < howmanynations) (planets+i)->nation = (nations+i+1);
+        else if(i < howmanyplayable) (planets+i)->nation = nations;
+        else (planets+i)->nation = (nations + NATION_MAX-1);
+
         (planets+i)->population = PLANET_POPULATION;
-        (planets+i)->angle = 0;
+        (planets+i)->angle = (rand()%360);
+        /*can add a random rotation speed*/
         (planets+i)->typeoftexture = 0;
 
-        (planets+i)->rect.h = PLANET_H;
-        (planets+i)->rect.w = PLANET_W;
+        //random planet size
+        (planets+i)->rect.h = PLANET_MIN_R + ((rand())%(PLANET_MAX_R - PLANET_MIN_R));
+        //not random planet size
+        //(planets+i)->rect.h = PLANET_MIN_R;
+        (planets+i)->rect.w = (planets+i)->rect.h;
 
         while (true)
         {
@@ -67,8 +73,10 @@ void Planet_alloc (int howmany , struct Planet* planets , struct Nation* nations
             if(Planet_dis_checker_n(i , planets , *(planets+i))) break;
         }
 
-        (planets+i)->rect.x = (planets+i)->x - PLANET_W/2;
-        (planets+i)->rect.y = (planets+i)->y - PLANET_H/2;
+        (planets+i)->rect.x = (planets+i)->x - ((planets+i)->rect.h)/2;
+        (planets+i)->rect.y = (planets+i)->y - ((planets+i)->rect.h)/2;
+
+        /*check if alghoritem last long try another pattern fro the brginning*/
     }
 }
 

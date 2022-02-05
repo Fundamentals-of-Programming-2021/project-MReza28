@@ -6,30 +6,27 @@
 #endif
 
 int main (int argc, char *argv[]) {
-    int k = 0;
-    struct Nation Q[4];
-    struct Planet A[10];
-    int s[10][10];
+    struct Nation Nations[NATION_MAX];
+    struct Planet Planets[PLANET_MAX];
     
-    Planet_alloc(10 , A , Q);
-    Planet_dis_finder_n(10 , A , s);
+    struct Spaceship Spaceships[SPACESHIP_MAX];
+    Spaceship_alloc(Spaceships);
+    int indexSpaceship = 0;
 
-    for (int i = 0; i < 10; i++)
-    {
-        printf("%d %d\n" , A[i].x , A[i].y);
-    }
+    struct Attack Attacks[ATTACK_MAX];
+    Attack_alloc(Attacks);
+    int indexAttack = 0;
 
-    
-    struct Spaceship x;
-    struct Nation na[2];
-    na->color = 0;
+    int PlanetsDistances[PLANET_MAX][PLANET_MAX];
 
+    int n = 1;
+    int p = 10;
+    int v = 0;
 
-    
-    Spaceship_creat(na , &A[0] , &A[1] , &x , s);
-    printf("%.2lf" , x.angle);
+    Planet_alloc(p , n , v , Planets , Nations);
+    Planet_dis_finder_n(p , Planets , PlanetsDistances);
+    Attack_creat(Attacks , (Planets) , (Planets+1) );
 
-    
 
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0)
     {
@@ -48,6 +45,7 @@ int main (int argc, char *argv[]) {
 	    return 1;
     }
 
+    // create a renderer, which sets up the graphics hardware
     Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
     SDL_Renderer* rend = SDL_CreateRenderer(win, -1, render_flags);
     if (!rend)
@@ -58,11 +56,15 @@ int main (int argc, char *argv[]) {
       return 1;
     }
 
-    SDL_Surface *texx[2] = {IMG_Load("IMAGES/a.png") , IMG_Load("IMAGES/b.png")};
-    SDL_Texture *tex[2] = {SDL_CreateTextureFromSurface(rend , texx[0]) , SDL_CreateTextureFromSurface(rend , texx[1])};
+    SDL_Surface* surf[2] = {IMG_Load("IMAGES/a.png") , IMG_Load("IMAGES/b.png")};
+    SDL_Texture* tex[2] = {SDL_CreateTextureFromSurface(rend , surf[0]) , SDL_CreateTextureFromSurface(rend , surf[1])};
 
-    
-    
+    Nations->color = 0;
+    (Nations+1)->color = 1;
+
+
+
+
     int close_requested = 0;
     while (!close_requested)
     {
@@ -75,32 +77,24 @@ int main (int argc, char *argv[]) {
                 close_requested = 1;
             }
         }
-        
-        // clear the window
         SDL_RenderClear(rend);
-        
-        x.rect.w = 24;
-        x.rect.h = 24;
-        if(x.moving)
-        Spaceship_movement(&x , rend , tex);
-        
-        for (int i = 0; i < 10; i++)
-        {
-            Planet_render(&A[i] , rend , tex);
-        }
-        
 
-        k++;
-        if(k%15 == 0) na->color = 1;
-        if(k%30 == 0) na->color = 0;
+        Attack_handling(Attacks , &indexSpaceship , Spaceships , PlanetsDistances);
+        
+        for(int i = 0 ; i < SPACESHIP_MAX ; i++){
+            Spaceship_render(&(Spaceships[i]) , rend , tex);
+        }
+
+        for(int i = 0 ; i < p ; i++){
+            Planet_render((Planets+i) , rend , tex);
+        }
 
         SDL_RenderPresent(rend);
-        // wait 1/60th of a second
         SDL_Delay(1000/60);
     }
 
-    SDL_DestroyTexture(*(tex));
-    SDL_DestroyTexture(*(tex+1));
+
+
     SDL_DestroyRenderer(rend);
     SDL_DestroyWindow(win);
     SDL_Quit();
