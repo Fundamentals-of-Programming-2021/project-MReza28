@@ -1,5 +1,5 @@
 //Base Defines
-#define PLANET_MAX (10)
+#define PLANET_MAX (15)
 #define NATION_MAX (6)
 #define SPACESHIP_MAX (500)
 #define ATTACK_MAX (20)

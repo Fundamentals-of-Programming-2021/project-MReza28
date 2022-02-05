@@ -20,8 +20,8 @@ int main (int argc, char *argv[]) {
     int PlanetsDistances[PLANET_MAX][PLANET_MAX];
 
     int n = 1;
-    int p = 10;
-    int v = 0;
+    int p = 4;
+    int v = 4;
 
     Planet_alloc(p , n , v , Planets , Nations);
     Planet_dis_finder_n(p , Planets , PlanetsDistances);
@@ -61,7 +61,33 @@ int main (int argc, char *argv[]) {
 
     Nations->color = 0;
     (Nations+1)->color = 1;
+    Nations[5].color = 0;
 
+
+
+    TTF_Init();
+
+    TTF_Font * font = TTF_OpenFont("Arial.ttf", 30);
+    SDL_Surface *background = SDL_LoadBMP("");
+    SDL_Surface *rank_s[10];
+    SDL_Texture *rank[10];
+
+    int texW[10];
+    int texH[10];
+    SDL_Rect jaigah[10];
+    SDL_Color grey={100,100,100};
+    for (int i = 0; i < 10; i++){
+        rank_s[i] = TTF_RenderText_Solid(font , "salam ", grey);
+        rank[i] = SDL_CreateTextureFromSurface(rend, rank_s[i]);
+        texW[i] = 0;
+        texH[i] = 0;
+        SDL_QueryTexture(rank[0], NULL, NULL, &texW[i], &texH[i]);
+
+        jaigah[i].x = (1000 - rank_s[i]->w) / 2;
+        jaigah[i].y = 150 + 50 * i;
+        jaigah[i].w = texW[i];
+        jaigah[i].h = texH[i];
+    }
 
 
 
@@ -85,10 +111,14 @@ int main (int argc, char *argv[]) {
             Spaceship_render(&(Spaceships[i]) , rend , tex);
         }
 
-        for(int i = 0 ; i < p ; i++){
+        for(int i = 0 ; i < p+v ; i++){
             Planet_render((Planets+i) , rend , tex);
         }
 
+        for (int i = 0 ; i < 10; i++){
+            SDL_RenderCopy(rend, rank[i], NULL, &jaigah[i]);
+        }
+        
         SDL_RenderPresent(rend);
         SDL_Delay(1000/60);
     }
