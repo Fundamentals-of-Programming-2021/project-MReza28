@@ -2,6 +2,7 @@
 #include "Distance.h"
 
 struct Button {
+    bool show;
     SDL_Rect rect;
     SDL_Texture* texture[3];
     //0:normal  1:mouse on button  2:mouse clicked
@@ -20,16 +21,30 @@ void Rectanglesetcolor (SDL_Renderer* renderer , SDL_Rect* rect , Uint8 r , Uint
     SDL_SetRenderDrawColor(renderer , 0 , 0 , 0 , 255);
 }
 
-
 void Button_creat (struct Button* button , int x , int y , SDL_Texture* texture[3]){
+    button->show = true;
     SDL_QueryTexture(texture[0] , NULL , NULL , &(button->rect.w) , &(button->rect.h));
+    for (int i = 0; i < 3; i++)
+    {
+        button->texture[i] = texture[i];
+    }
+    
     button->rect.x = x;
     button->rect.y = y;
     button->state = 0;
 }
 
 void Button_render (struct Button* button , SDL_Renderer* renderer){
-    SDL_RenderCopy(renderer , (button->texture[button->state]) , NULL , &button->rect);
+    if(button->show) SDL_RenderCopy(renderer , (button->texture[button->state]) , NULL , &button->rect);
+}
+
+bool Button_mouseon (int x , int y , struct Button button) {
+    if(button.rect.x-1 < x && (button.rect.x + button.rect.w)+1 > x){
+        if(button.rect.y-1 < y && (button.rect.y + button.rect.h)+1 > y){
+            return true;
+        }
+    }
+    return false;
 }
 
 bool Menu_start (SDL_Renderer* renderer ) {

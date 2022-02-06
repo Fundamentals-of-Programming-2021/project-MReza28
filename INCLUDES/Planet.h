@@ -89,6 +89,13 @@ void Planet_alloc (int howmanyplayable , int howmanynations , int howmanyvoidpla
     }
 }
 
+bool Planet_mouseon (int x , int y , struct Planet* planet){
+    if(Distance_2D(x , planet->x , y , planet->y) > (planet->rect.h)/2 + 1){
+        return true;
+    }
+    return false;
+}
+
 void Planet_render (struct Planet* obj , SDL_Renderer* renderer , SDL_Texture **planettextures) {
     SDL_RenderCopyEx(renderer , *(planettextures + obj->typeoftexture) /*adding color of nation*/ , NULL , &(obj->rect) , obj->angle , NULL , SDL_FLIP_NONE);
     obj->angle += PLANET_ROTATION_SPEED;
