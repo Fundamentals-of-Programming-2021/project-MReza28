@@ -1,4 +1,5 @@
 #include "Main_includes.h"
+#include "Distance.h"
 
 struct Button {
     SDL_Rect rect;
@@ -7,7 +8,6 @@ struct Button {
     int state;
 };
 
-//
 void Creattexturefrompng (char* address , SDL_Texture** texture , SDL_Renderer* renderer){
     SDL_Surface* surf = IMG_Load(address);
     *texture = SDL_CreateTextureFromSurface(renderer , surf);
@@ -19,7 +19,7 @@ void Rectanglesetcolor (SDL_Renderer* renderer , SDL_Rect* rect , Uint8 r , Uint
     SDL_RenderFillRect(renderer , rect);
     SDL_SetRenderDrawColor(renderer , 0 , 0 , 0 , 255);
 }
-//
+
 
 void Button_creat (struct Button* button , int x , int y , SDL_Texture* texture[3]){
     SDL_QueryTexture(texture[0] , NULL , NULL , &(button->rect.w) , &(button->rect.h));
@@ -157,5 +157,11 @@ bool Menu_start (SDL_Renderer* renderer ) {
         SDL_RenderPresent(renderer);
         SDL_Delay(1000/60);
     }
+    
+    for (int i = 0; i < 5; i++)
+    {
+        SDL_DestroyTexture(textures[i]);
+    }
+    
     return true;
 }

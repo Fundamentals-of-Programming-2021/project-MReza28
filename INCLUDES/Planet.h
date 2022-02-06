@@ -10,6 +10,9 @@ struct Planet {
     int y;
     double angle;
 
+    bool mouseon;
+    bool trigered;
+
     int population;
     int typeoftexture;
 };
@@ -68,6 +71,9 @@ void Planet_alloc (int howmanyplayable , int howmanynations , int howmanyvoidpla
         //not random planet size
         //(planets+i)->rect.h = PLANET_MIN_R;
         (planets+i)->rect.w = (planets+i)->rect.h;
+
+        (planets+i)->trigered = false;
+        (planets+i)->mouseon = false;
 
         while (true)
         {
