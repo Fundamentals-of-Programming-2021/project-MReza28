@@ -1,7 +1,18 @@
 #include "Main_includes.h"
-#include "Premenu.h"
+#include "Game.h"
 
 bool Menu_main (SDL_Renderer* renderer){
+    //creatin game logo
+    SDL_Texture* texturelogo;
+    SDL_Rect rectlogo;
+    Creattexturefrompng("IMAGES/Menu/gamelogo2.png" , &texturelogo , renderer);
+    rectlogo.h = 320;
+    rectlogo.w = 740;
+    rectlogo.y = 50;
+    rectlogo.x = 590;
+
+
+    //creatin main left buttons
     struct Button bcontinue;
     struct Button bnewgame;
     struct Button bload;
@@ -35,8 +46,15 @@ bool Menu_main (SDL_Renderer* renderer){
     Creattexturefrompng("IMAGES/Menu/bec.png" , textures+2 , renderer);
     Button_creat(&bexit , 100 , 850 , textures);
 
+    //creat black rects
+    SDL_Rect blackleft;
+    blackleft.h = 500;
+    blackleft.w = 300;
+    blackleft.x = 100;
+    blackleft.y = 500;
 
-    while (true)
+    int a = 254;
+    while (a > -1)
     {
         SDL_Event event;
         while (SDL_PollEvent(&event))
@@ -49,14 +67,22 @@ bool Menu_main (SDL_Renderer* renderer){
         
         SDL_RenderClear(renderer);
 
+        SDL_RenderCopy(renderer , texturelogo , NULL , &rectlogo);
+
         Button_render(&bcontinue , renderer);
         Button_render(&bnewgame , renderer);
         Button_render(&bload , renderer);
         Button_render(&bscores , renderer);
         Button_render(&bexit , renderer);
 
+        Rectanglesetcolor(renderer , &blackleft , 0 , 0 , 0 , a);
+        SDL_RenderCopy(renderer , NULL , NULL , &blackleft);
+        a-=2;
+
         SDL_RenderPresent(renderer);
+
         SDL_Delay(1000/60);
     }
-    
+
+    /*free all buttons texture*/
 }

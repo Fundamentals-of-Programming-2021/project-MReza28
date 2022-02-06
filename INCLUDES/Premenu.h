@@ -1,5 +1,5 @@
 #include "Main_includes.h"
-#include "Distance.h"
+#include "Attack.h"
 
 struct Button {
     bool show;
@@ -46,6 +46,11 @@ bool Button_mouseon (int x , int y , struct Button button) {
     }
     return false;
 }
+
+
+
+
+
 
 bool Menu_start (SDL_Renderer* renderer ) {
     int timecounter;
