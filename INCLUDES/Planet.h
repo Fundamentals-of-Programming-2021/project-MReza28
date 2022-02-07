@@ -103,3 +103,11 @@ void Planet_render (struct Planet* obj , SDL_Renderer* renderer , SDL_Texture **
     
     /*adding potion effect*/
 }
+
+void Planet_render_n (struct Planet* planets , SDL_Renderer* renderer , SDL_Texture **planettextures , int howmanyplanetstotal) {
+    for (int i = 0; i < howmanyplanetstotal; i++)
+    {
+        Planet_render(planets+i , renderer , planettextures);
+    }
+    
+}

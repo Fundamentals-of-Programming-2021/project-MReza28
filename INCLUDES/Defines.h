@@ -7,7 +7,8 @@
 #define PLANET_MIN_DIS (300)
 #define SPACESHIP_MIN_DIS (5)
 
-#define PLANET_TYPES (1)
+#define PLANET_TYPES (12)
+#define PLANET_TYPES_V (6)
 #define SPACESHIP_TYPES (1)
 
 #define PLANET_POPULATION (20)

@@ -68,8 +68,12 @@ int main (int argc, char *argv[]) {
     }*/
 
 
-    if(Running){
+    /*if(Running){
         Running = Menu_main(rend);
+    }*/
+
+    if(Running) {
+        Running = Game_start(rend , 4 , 5 , 5);
     }
 
 
