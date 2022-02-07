@@ -5,6 +5,7 @@ struct Planet {
     int id;
     struct Nation* nation;
     SDL_Rect rect;
+    SDL_Rect poprect;
 
     int x;
     int y;
@@ -52,14 +53,14 @@ void Planet_alloc (int howmanyplayable , int howmanynations , int howmanyvoidpla
     for (int i = 0 ; i < howmanyplayable + howmanyvoidplanets ; i++)
     {
         (planets+i)->id = i;
-        (planets+i)->typeoftexture = 0;
+        (planets+i)->typeoftexture = PLANET_TYPES_V + rand()%PLANET_TYPES;
 
         //creating white planets and void planets
         if(i < howmanynations) (planets+i)->nation = (nations+i+1);
         else if(i < howmanyplayable) (planets+i)->nation = nations;
         else {
             (planets+i)->nation = (nations + NATION_MAX-1);
-            (planets+i)->typeoftexture = 1;
+            (planets+i)->typeoftexture = rand()%PLANET_TYPES_V;
         }
 
         (planets+i)->population = PLANET_POPULATION;
@@ -71,6 +72,9 @@ void Planet_alloc (int howmanyplayable , int howmanynations , int howmanyvoidpla
         //not random planet size
         //(planets+i)->rect.h = PLANET_MIN_R;
         (planets+i)->rect.w = (planets+i)->rect.h;
+
+        //adding place of text
+        (planets+i)->poprect.x;
 
         (planets+i)->trigered = false;
         (planets+i)->mouseon = false;
@@ -84,6 +88,8 @@ void Planet_alloc (int howmanyplayable , int howmanynations , int howmanyvoidpla
 
         (planets+i)->rect.x = (planets+i)->x - ((planets+i)->rect.h)/2;
         (planets+i)->rect.y = (planets+i)->y - ((planets+i)->rect.h)/2;
+        (planets+i)->poprect.x = (planets+i)->rect.x + (planets+i)->rect.w;
+        (planets+i)->poprect.y = (planets+i)->rect.y + 5;
 
         /*check if alghoritem last long try another pattern fro the brginning*/
     }
@@ -96,18 +102,27 @@ bool Planet_mouseon (int x , int y , struct Planet* planet){
     return false;
 }
 
-void Planet_render (struct Planet* obj , SDL_Renderer* renderer , SDL_Texture **planettextures) {
+void Planet_render (struct Planet* obj , SDL_Renderer* renderer , SDL_Texture **planettextures , TTF_Font* popfont) {
     SDL_RenderCopyEx(renderer , *(planettextures + obj->typeoftexture) /*adding color of nation*/ , NULL , &(obj->rect) , obj->angle , NULL , SDL_FLIP_NONE);
     obj->angle += PLANET_ROTATION_SPEED;
     if(obj->angle > 360) obj->angle-=360.0;
     
+    //font
+    SDL_Texture* fonttexture;
+    SDL_Color white = {255 , 255 , 255};
+    numbertotexture(obj->population , popfont , white , &fonttexture , renderer);
+    SDL_QueryTexture(fonttexture , NULL , NULL , &(obj->poprect.w) , &(obj->poprect.h) );
+    SDL_RenderCopy(renderer , fonttexture , NULL , &(obj->poprect));
+    SDL_DestroyTexture(fonttexture);
+    
+
     /*adding potion effect*/
 }
 
-void Planet_render_n (struct Planet* planets , SDL_Renderer* renderer , SDL_Texture **planettextures , int howmanyplanetstotal) {
+void Planet_render_n (struct Planet* planets , SDL_Renderer* renderer , SDL_Texture **planettextures , int howmanyplanetstotal , TTF_Font* popfont) {
     for (int i = 0; i < howmanyplanetstotal; i++)
     {
-        Planet_render(planets+i , renderer , planettextures);
+        Planet_render(planets+i , renderer , planettextures , popfont);
     }
     
 }

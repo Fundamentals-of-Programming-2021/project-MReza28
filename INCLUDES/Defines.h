@@ -17,7 +17,7 @@
 #define ATTAK_SPEED (4)
 #define EXITING_COUNTER (6)
 
-#define PLANET_ROTATION_SPEED (0.25)
+#define PLANET_ROTATION_SPEED (0.1)
 #define POPULATION_CAB (50)
 
 //Size Defines
@@ -27,8 +27,8 @@
 #define SPACESHIP_W (24)
 #define SPACESHIP_H (24)
 
-#define PLANET_MIN_R (100)
-#define PLANET_MAX_R (120)
+#define PLANET_MIN_R (80)
+#define PLANET_MAX_R (100)
 
 //Main Game Borders
 #define GAME_H_S (200)

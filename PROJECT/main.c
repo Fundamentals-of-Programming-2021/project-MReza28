@@ -36,16 +36,16 @@ int main (int argc, char *argv[]) {
       return 1;
     }
     SDL_SetRenderDrawBlendMode(rend, SDL_BLENDMODE_BLEND);
-
+    TTF_Init();
     /*if(Running){
         Running = Menu_start(rend);
     }*/
 
 
 
-    /*TTF_Init();
 
-    TTF_Font * font = TTF_OpenFont("Arial.ttf", 30);
+
+    /*TTF_Font * font = TTF_OpenFont("Arial.ttf", 30);
     SDL_Surface *background = SDL_LoadBMP("");
     SDL_Surface *rank_s[10];
     SDL_Texture *rank[10];
@@ -73,7 +73,7 @@ int main (int argc, char *argv[]) {
     }*/
 
     if(Running) {
-        Running = Game_start(rend , 4 , 5 , 5);
+        Running = Game_start(rend , 4 , 6 , 2);
     }
 
 

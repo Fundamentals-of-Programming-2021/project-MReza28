@@ -83,6 +83,9 @@ bool Menu_main (SDL_Renderer* renderer){
 
         SDL_Delay(1000/60);
     }
-
+    
     /*free all buttons texture*/
+
+
+    return true;
 }

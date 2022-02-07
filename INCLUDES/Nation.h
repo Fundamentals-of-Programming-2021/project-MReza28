@@ -22,7 +22,7 @@ void Nation_alloc (struct Nation* nations , int howmanynations) {
         (nations+i)->potion = 0;
         (nations+i)->potiontime = 0;
     }
-    
+
     (nations+NATION_MAX-1)->color = -1;
     (nations+NATION_MAX-1)->alive = false;
     nations->alive = false;

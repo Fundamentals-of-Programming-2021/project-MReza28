@@ -2,6 +2,11 @@
 #include "Premenu.h"
 
 bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets) {
+    //creating backgrounfd
+    SDL_Texture* background;
+    Creattexturefrompng("IMAGES/background.jpg" , &background , renderer);
+    
+    
     //creating nations
     struct Nation Nations[NATION_MAX];
     Nation_alloc(Nations , howmanynations);
@@ -47,6 +52,11 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     Attack_alloc(Attacks);
 
     
+
+    //creatin fonts
+    TTF_Font* Populationfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 20);
+    
+    
     
     while (true)
     {
@@ -60,8 +70,19 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
         }
         
         SDL_RenderClear(renderer);
-        Planet_render_n(Planets , renderer , Planetstextures , howmanyplanets+howmanyvoidplanets);
+
+        SDL_RenderCopy(renderer , background , NULL , NULL);
+        Planet_render_n(Planets , renderer , Planetstextures , howmanyplanets+howmanyvoidplanets , Populationfont);
+
         SDL_RenderPresent(renderer);
     }
     
+
+
+
+
+    //Destroyin datas
+    TTF_CloseFont(Populationfont);
+
+    return true;
 }
