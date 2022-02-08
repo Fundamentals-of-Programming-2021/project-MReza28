@@ -73,7 +73,7 @@ int main (int argc, char *argv[]) {
     }*/
 
     if(Running) {
-        Running = Game_start(rend , 4 , 7 , 0);
+        Running = Game_start(rend , 4 , 7 , 2);
     }
 
 

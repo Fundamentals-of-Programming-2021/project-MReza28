@@ -65,6 +65,25 @@ bool Menu_main (SDL_Renderer* renderer){
             }
         }
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         SDL_RenderClear(renderer);
 
         SDL_RenderCopy(renderer , texturelogo , NULL , &rectlogo);

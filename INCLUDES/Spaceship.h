@@ -52,7 +52,7 @@ void Spaceship_movement (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Te
     obj->rect.x = obj->x - SPACESHIP_W/2;
     obj->rect.y = obj->y - SPACESHIP_H/2;
 
-    SDL_RenderCopyEx(renderer , *(spaceshiptextures+(obj->nation->color) /*and adding  type of texture*/) , NULL ,  &(obj->rect) , obj->angle , NULL , SDL_FLIP_NONE);
+    SDL_RenderCopyEx(renderer , *(spaceshiptextures+(obj->nation->color)-1 /*and adding  type of texture*/) , NULL ,  &(obj->rect) , obj->angle , NULL , SDL_FLIP_NONE);
 
     /*adding rendercopy for potions*/
 

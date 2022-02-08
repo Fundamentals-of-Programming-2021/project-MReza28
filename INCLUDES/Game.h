@@ -10,8 +10,6 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     //creating nations
     struct Nation Nations[NATION_MAX];
     Nation_alloc(Nations , howmanynations);
-    ///////
-    Nations->color = 2;
     
     
     //creating planets
@@ -33,6 +31,9 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
         SDL_FreeSurface(Planetssurfaces[i]);
     }
     int trigered = -1;
+    
+    //font colors
+    SDL_Color colors[5] = {{255,255,255} , {255,0,0} , {0,0,255} , {0,255,0} , {255,255,0}};
 
 
     //creating distances
@@ -114,7 +115,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
 
         Spaceship_render_n(Spaceships , renderer , Spaceshipstexture);
 
-        Planet_render_n(Planets , renderer , Planetstextures , howmanyplanets+howmanyvoidplanets , Populationfont);
+        Planet_render_n(Planets , renderer , Planetstextures , howmanyplanets+howmanyvoidplanets , Populationfont , colors);
 
 
         SDL_RenderPresent(renderer);
