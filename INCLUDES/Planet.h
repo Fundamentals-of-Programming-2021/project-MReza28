@@ -135,11 +135,13 @@ void Planet_render (struct Planet* obj , SDL_Renderer* renderer , SDL_Texture **
 
 
     //font
-    SDL_Texture* fonttexture;
-    numbertotexture(obj->population , popfont , *(colors + (obj->nation->color)) , &fonttexture , renderer);
-    SDL_QueryTexture(fonttexture , NULL , NULL , &(obj->poprect.w) , &(obj->poprect.h) );
-    SDL_RenderCopy(renderer , fonttexture , NULL , &(obj->poprect));
-    SDL_DestroyTexture(fonttexture);
+    if(obj->nation->color != -1){
+        SDL_Texture* fonttexture;
+        numbertotexture(obj->population , popfont , *(colors + (obj->nation->color)) , &fonttexture , renderer);
+        SDL_QueryTexture(fonttexture , NULL , NULL , &(obj->poprect.w) , &(obj->poprect.h) );
+        SDL_RenderCopy(renderer , fonttexture , NULL , &(obj->poprect));
+        SDL_DestroyTexture(fonttexture);
+    }
 
 
 

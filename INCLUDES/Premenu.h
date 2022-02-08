@@ -32,16 +32,38 @@ void Button_render (struct Button* button , SDL_Renderer* renderer){
     if(button->show) SDL_RenderCopy(renderer , (button->texture[button->state]) , NULL , &button->rect);
 }
 
-bool Button_mouseon (int x , int y , struct Button button) {
-    if(button.rect.x-1 < x && (button.rect.x + button.rect.w)+1 > x){
-        if(button.rect.y-1 < y && (button.rect.y + button.rect.h)+1 > y){
+bool Button_mouseon (int x , int y , struct Button* button) {
+    if(button->rect.x-1 < x && (button->rect.x + button->rect.w)+1 > x){
+        if(button->rect.y-1 < y && (button->rect.y + button->rect.h)+1 > y){
+            button->state = 1;
             return true;
         }
     }
+    button->state = 0;
     return false;
 }
 
+bool blackingscreen (SDL_Renderer* renderer){
+    SDL_Rect blackrect;
+    blackrect.x = 0;
+    blackrect.y = 0;
+    blackrect.w = 1920;
+    blackrect.h = 1080;
+    for (int i = 0; i < 60; i++)
+    {
+        SDL_Event event;
+        SDL_PollEvent(&event);
+        int mousex , mousey;
+        //quit handeling
+        if (event.type == SDL_QUIT) return false;
 
+        Rectanglesetcolor(renderer , &blackrect , 0 , 0 , 0 , 12);
+        SDL_RenderCopy(renderer , NULL , NULL , &blackrect);
+        SDL_RenderPresent(renderer);
+        SDL_Delay(1000/60);
+    }
+    return true;
+}
 
 
 

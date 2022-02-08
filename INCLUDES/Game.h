@@ -90,7 +90,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
             }
         }
 
-        if((mouseon != -1) && trigered != mouseon && event.type == SDL_MOUSEBUTTONDOWN && mouseb == 1){
+        if((mouseon != -1) && trigered != mouseon && event.button.button == SDL_BUTTON_LEFT){
             if(trigered == -1) {
                 (Planets+mouseon)->trigered = true;
                 trigered = mouseon;
@@ -103,9 +103,12 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
                 trigered = -1;
             }
         }
-        else if (event.type == SDL_MOUSEBUTTONDOWN && mouseb == 1){
+        else if (event.type == event.button.button == SDL_BUTTON_LEFT){
             (Planets+trigered)->trigered = false;
             trigered = -1;
+        }
+        else if(event.button.button == SDL_BUTTON_RIGHT){
+            return true;
         }
 
         SDL_RenderClear(renderer);
@@ -134,7 +137,9 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
         SDL_DestroyTexture(Planetstextures[i]);
     }
     SDL_DestroyTexture(background);
-
+    for (int i = 0; i < SPACESHIP_TYPES*4 ; i++){
+        SDL_DestroyTexture(Spaceshipstexture[i]);
+    }
 
     return true;
 }

@@ -24,7 +24,7 @@ void Attack_alloc (struct Attack* attacks){
 }
 
 void Attack_creat (struct Attack* attack , struct Planet* start , struct Planet* end){
-    if(start->population > 0){
+    if(start->population > 0) {
         attack->attacking = true;
         
         attack->nation = start->nation;

@@ -52,37 +52,80 @@ bool Menu_main (SDL_Renderer* renderer){
     blackleft.w = 300;
     blackleft.x = 100;
     blackleft.y = 500;
+    int blackleftcount = 254;
 
-    int a = 254;
-    while (a > -1)
+    while (true)
     {
         SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
+        SDL_PollEvent(&event);
+        int mousex , mousey;
+        //quit handeling
+        if (event.type == SDL_QUIT) return false;
+        //mouse handling
+        Uint32 mouseb; 
+        mouseb = SDL_GetMouseState(&mousex , &mousey);
+
+        int mouseon = 0;
+
+        if(Button_mouseon(mousex , mousey , &bcontinue)) mouseon = 1;
+        if(Button_mouseon(mousex , mousey , &bnewgame)) mouseon = 2;
+        if(Button_mouseon(mousex , mousey , &bload)) mouseon = 3;
+        if(Button_mouseon(mousex , mousey , &bscores)) mouseon = 4;
+        if(Button_mouseon(mousex , mousey , &bexit)) mouseon = 5;
+        
+        if(event.button.button == SDL_BUTTON_LEFT){
+            //blacking screen
+            if(mouseon != 0){
+                if(!blackingscreen(renderer)){
+                    return false;
+                }
+                blackleftcount = 254;
+            }
+
+            switch (mouseon)
             {
-                return false;
+            case 1:
+            {
+                if(!Game_start(renderer , 4 , 7 , 2)) {
+                    return false;
+                }     
+                break;
+            }
+            
+            case 2:
+            {
+                if(!Game_start(renderer , 4 , 7 , 2)) {
+                    return false;
+                }     
+                break;
+            }
+            
+            case 3:
+            {
+                if(!Game_start(renderer , 4 , 7 , 2)) {
+                    return false;
+                }     
+                break;
+            }
+
+            case 4:
+            {
+                if(!Game_start(renderer , 4 , 7 , 2)) {
+                    return false;
+                }     
+                break;
+            }
+
+            case 5:
+            {
+                return false; 
+                break;
+            }
+
+            default:
+                break;
             }
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         SDL_RenderClear(renderer);
 
@@ -94,14 +137,18 @@ bool Menu_main (SDL_Renderer* renderer){
         Button_render(&bscores , renderer);
         Button_render(&bexit , renderer);
 
-        Rectanglesetcolor(renderer , &blackleft , 0 , 0 , 0 , a);
-        SDL_RenderCopy(renderer , NULL , NULL , &blackleft);
-        a-=2;
+        //blackscreen
+        if(blackleftcount > -1){
+            Rectanglesetcolor(renderer , &blackleft , 0 , 0 , 0 , blackleftcount);
+            SDL_RenderCopy(renderer , NULL , NULL , &blackleft);
+            blackleftcount-=2;
+        }
 
         SDL_RenderPresent(renderer);
 
         SDL_Delay(1000/60);
     }
+    
     
     /*free all buttons texture*/
 
