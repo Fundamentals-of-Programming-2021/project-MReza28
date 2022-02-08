@@ -65,7 +65,25 @@ bool blackingscreen (SDL_Renderer* renderer){
     return true;
 }
 
+void Savegame (
+    char* fileadress , int hnation , int hplanet , int hvplanet ,
+    int playercolor ,int playerspaceshiptype , struct Nation* nations ,
+    struct Planet* planets , struct Spaceship* spaceships , struct Attack* attacks
+    )
+{
+    FILE* saveslot = fopen(fileadress , "w");
+    fprintf(saveslot , "%d %d %d %d %d\n" , hnation , hplanet , hvplanet , playercolor , playerspaceshiptype);
+
+    for(int i = 0 ; i < NATION_MAX ; i++) {
+        fprintf(saveslot , "%d %d %d %d %d\n" , (nations+i)->alive , (nations+i)->armytexture , (nations+i)->color , (nations+i)->potion , (nations+i)->potiontime);
+    }
+    for(int i = 0 ; i < PLANET_MAX ; i++) {
+        //fprintf(saveslot , "" , (planets+i)->angle , (planets+i)->id , (planets+i)->mouseon , (planets+i)->)
+    }
+}
+
 bool Menu_start (SDL_Renderer* renderer ) {
+
     int timecounter;
     SDL_Texture* textures[5];
     

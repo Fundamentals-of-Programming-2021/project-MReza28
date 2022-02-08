@@ -7,7 +7,7 @@ void Exrtactingscore (char names[10][NAME_MAX_L] , int scores[10]) {
     {
         fscanf(fscores , "%[^\n]%d%*c" , names[i] , &scores[i]);
     }
-    
+    fclose(fscores);
 }
 
 void Extractingcontinue () {
@@ -130,7 +130,7 @@ bool Menu_main (SDL_Renderer* renderer){
             {
             case 1:
             {
-                if(!Game_start(renderer , 4 , 7 , 2)) {
+                if(!Game_start(renderer , 4 , 7 , 2 , 1 , 2)) {
                     return false;
                 }     
                 break;
@@ -146,7 +146,7 @@ bool Menu_main (SDL_Renderer* renderer){
             
             case 3:
             {
-                if(!Game_start(renderer , 4 , 7 , 2)) {
+                if(!Game_start(renderer , 4 , 7 , 2 , 1 , 1)) {
                     return false;
                 }     
                 break;

@@ -1,7 +1,11 @@
 #include "Main_includes.h"
 #include "Premenu.h"
 
-bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets) {
+bool Game_pause () {
+
+}
+
+bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets , int playerspaceshiptype , int playercolor) {
     long long int counter = 0;
     
     //creating backgrounfd
@@ -11,7 +15,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     
     //creating nations
     struct Nation Nations[NATION_MAX];
-    Nation_alloc(Nations , howmanynations);
+    Nation_alloc(Nations , howmanynations , playercolor);
     
     
     //creating planets
@@ -94,7 +98,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
 
         if(event.type == SDL_MOUSEBUTTONDOWN){
             if((mouseon != -1) && trigered != mouseon && event.button.button == SDL_BUTTON_LEFT){
-                if(trigered == -1) {
+                if(trigered == -1 && (Planets+mouseon)->nation->color == playercolor) {
                     (Planets+mouseon)->trigered = true;
                     trigered = mouseon;
                 }
@@ -131,7 +135,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
         if(counter%POPULATION_SPEED == 0) {
             for (int i = 0; i < howmanyplanets ; i++)
             {
-                if(Planets[i].population < POPULATION_CAB){
+                if(Planets[i].population < POPULATION_CAB && Planets[i].nation->alive){
                     Planets[i].population++;
                 }
             }
