@@ -2,6 +2,8 @@
 #include "Premenu.h"
 
 bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets) {
+    long long int counter = 0;
+    
     //creating backgrounfd
     SDL_Texture* background;
     Creattexturefrompng("IMAGES/background.jpg" , &background , renderer);
@@ -90,26 +92,59 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
             }
         }
 
-        if((mouseon != -1) && trigered != mouseon && event.button.button == SDL_BUTTON_LEFT){
-            if(trigered == -1) {
-                (Planets+mouseon)->trigered = true;
-                trigered = mouseon;
+        if(event.type == SDL_MOUSEBUTTONDOWN){
+            if((mouseon != -1) && trigered != mouseon && event.button.button == SDL_BUTTON_LEFT){
+                if(trigered == -1) {
+                    (Planets+mouseon)->trigered = true;
+                    trigered = mouseon;
+                }
+                else {
+                    Attack_creat(Attacks+index_attacks , Planets+trigered , Planets+mouseon);
+                    index_attacks++;
+                    index_attacks%=ATTACK_MAX;
+                    (Planets+trigered)->trigered = false;
+                    trigered = -1;
+                }
             }
-            else {
-                Attack_creat(Attacks+index_attacks , Planets+trigered , Planets+mouseon);
-                index_attacks++;
-                index_attacks%=ATTACK_MAX;
+            else if (event.button.button == SDL_BUTTON_LEFT){
                 (Planets+trigered)->trigered = false;
                 trigered = -1;
             }
+            else if(event.button.button == SDL_BUTTON_RIGHT){
+                break;
+            }
         }
-        else if (event.type == event.button.button == SDL_BUTTON_LEFT){
-            (Planets+trigered)->trigered = false;
-            trigered = -1;
+
+        int movingships[SPACESHIP_MAX];
+        int movingships_n = 0;
+
+        //spaceships creash handling
+        for (int i = 0; i < SPACESHIP_MAX; i++)
+        {
+            if(Spaceships[i].moving){
+                movingships[movingships_n] = i;
+                movingships_n++;
+            }
         }
-        else if(event.button.button == SDL_BUTTON_RIGHT){
-            break;
+
+        //increasing population of planets
+        if(counter%POPULATION_SPEED == 0) {
+            for (int i = 0; i < howmanyplanets ; i++)
+            {
+                if(Planets[i].population < POPULATION_CAB){
+                    Planets[i].population++;
+                }
+            }
         }
+        
+        for (size_t i = 0; i < movingships_n; i++)
+        {
+            for (int j = 0; j < movingships_n; j++)
+            {
+                Spaceship_dis_checker(Spaceships + movingships[i] , Spaceships + movingships[j]);
+            }
+        }
+        
 
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer , background , NULL , NULL);
@@ -122,7 +157,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
 
 
         SDL_RenderPresent(renderer);
-
+        counter++;
         SDL_Delay(1000/60);
     }
     

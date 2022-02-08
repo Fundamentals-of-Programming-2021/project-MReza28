@@ -42,6 +42,13 @@ void Spaceship_creat (struct Nation* nation , struct Planet* start , struct Plan
     spaceship->angle = atan2((double)((end->x)-(start->x)) , (double)((start->y)-(end->y))) * 180.0 / M_PI ;
 }
 
+void Spaceship_dis_checker (struct Spaceship *A , struct Spaceship *B) {
+    if(Distance_1D(A->x , A->y , B->x , B->y) < SPACESHIP_MIN_DIS && A->nation->color != B->nation->color){
+        A->moving = false;
+        B->moving = false;
+    }
+}
+
 void Spaceship_movement (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Texture **spaceshiptextures){
     (obj->lifetime)++;
     int distancemoved = ATTAK_SPEED*(obj->lifetime);
@@ -56,7 +63,7 @@ void Spaceship_movement (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Te
 
     /*adding rendercopy for potions*/
 
-    if(distancemoved > obj->pathlength){
+    if(distancemoved > obj->pathlength - obj->end->rect.w/2 + 5){
         obj->moving = false;
         if(obj->nation == obj->end->nation){
             obj->end->population++;

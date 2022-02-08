@@ -5,16 +5,16 @@
 #define ATTACK_MAX (20)
 
 #define PLANET_MIN_DIS (300)
-#define SPACESHIP_MIN_DIS (5)
+#define SPACESHIP_MIN_DIS (24)
 
 #define PLANET_TYPES (12)
 #define PLANET_TYPES_V (6)
 #define SPACESHIP_TYPES (1)
 
 #define PLANET_POPULATION (20)
-#define POPULATION_SPEED (1)
+#define POPULATION_SPEED (60)
 
-#define ATTAK_SPEED (4)
+#define ATTAK_SPEED (5)
 #define EXITING_COUNTER (6)
 
 #define PLANET_ROTATION_SPEED (0.1)

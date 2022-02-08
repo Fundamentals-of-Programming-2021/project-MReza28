@@ -25,6 +25,7 @@ bool Menu_newgame (SDL_Renderer* renderer) {
     SDL_QueryTexture(Username_up , NULL , NULL , &NG[1].w , &NG[1].h);
     NG[1].x = 1920/2 - NG[1].w/2;
 
+    
 
 
     //blackscreen
