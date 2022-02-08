@@ -37,4 +37,5 @@
 #define GAME_W_E (1820)
 
 //Menu
-#define NAME_MAX_L (10)
+#define NAME_MAX_L (17)
+#define TEXT_COLOR {220 , 220 , 230}

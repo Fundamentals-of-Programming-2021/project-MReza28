@@ -6,7 +6,25 @@ bool Menu_continue (SDL_Renderer* renderer) {
 }
 
 bool Menu_newgame (SDL_Renderer* renderer) {
-    
+    //font
+    SDL_Color Textcolor = TEXT_COLOR;
+    TTF_Font* Maintext = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 40);
+    TTF_Font* Othertext = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 24);
+    char Username[NAME_MAX_L] = {'\0'};
+    int Indexusername = 0;
+
+
+    //rects
+    SDL_Rect NG[5];
+    //username
+    NG[0].y = 200;
+    //username text upper
+    NG[1].y = 150;
+    SDL_Texture* Username_up;
+    texttotexture("Type Your Name" , Othertext , Textcolor , &Username_up , renderer);
+    SDL_QueryTexture(Username_up , NULL , NULL , &NG[1].w , &NG[1].h);
+    NG[1].x = 1920/2 - NG[1].w/2;
+
 
 
     //blackscreen
@@ -29,10 +47,35 @@ bool Menu_newgame (SDL_Renderer* renderer) {
             blackingscreen(renderer);
             break;
         }
-        
+        //key handling
+        if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE){
+            if(Indexusername > 0){
+                Username[Indexusername-1] = '\0';
+                Indexusername--;
+            }
+        }
+        else if(event.type == SDL_TEXTINPUT){
+            if (Indexusername < NAME_MAX_L-1) {
+                Username[Indexusername] = event.text.text[0];
+                Indexusername++;
+            }
+        }
+
         SDL_RenderClear(renderer);
 
-        
+
+        //text username
+        SDL_Texture* tusername;
+        texttotexture(Username , Maintext , Textcolor , &tusername , renderer);
+        SDL_QueryTexture(tusername , NULL , NULL , &(NG[0].w) , &(NG[0].h));
+        NG[0].x = 1920/2 - NG[0].w/2;
+        SDL_RenderCopy(renderer , tusername , NULL , &NG[0]);
+        SDL_RenderCopy(renderer , Username_up , NULL , &NG[1]);
+        SDL_DestroyTexture(tusername);
+
+
+
+
 
         //blackscreen
         if(blackleftcount > -1){
@@ -44,7 +87,11 @@ bool Menu_newgame (SDL_Renderer* renderer) {
         SDL_RenderPresent(renderer);
     }
 
-
+    //destoying
+    TTF_CloseFont(Maintext);
+    TTF_CloseFont(Othertext);
+    SDL_DestroyTexture(Username_up);
+    return true;
 }
 
 bool Menu_score (SDL_Renderer* renderer , char SCnames[10][NAME_MAX_L] , int SCscores[10]) {
@@ -57,7 +104,7 @@ bool Menu_score (SDL_Renderer* renderer , char SCnames[10][NAME_MAX_L] , int SCs
     SDL_Texture* tnames[10];
     SDL_Texture* tscores[10];
 
-    SDL_Color textcolor = {200 , 200 , 200};
+    SDL_Color textcolor = TEXT_COLOR;
     for (int i = 0; i < 10; i++)
     {
         texttotexture(SCnames[i] , Scoresfont , textcolor , &tnames[i] , renderer);

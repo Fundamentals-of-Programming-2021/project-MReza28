@@ -5,7 +5,7 @@ void Exrtactingscore (char names[10][NAME_MAX_L] , int scores[10]) {
     FILE* fscores = fopen("DATA/scores/scores.txt" , "r");
     for (int i = 0; i < 10; i++)
     {
-        fscanf(fscores , "%s%d%*c" , names[i] , &scores[i]);
+        fscanf(fscores , "%[^\n]%d%*c" , names[i] , &scores[i]);
     }
     
 }
@@ -138,7 +138,7 @@ bool Menu_main (SDL_Renderer* renderer){
             
             case 2:
             {
-                if(!Game_start(renderer , 4 , 7 , 2)) {
+                if(!Menu_newgame(renderer)) {
                     return false;
                 }     
                 break;

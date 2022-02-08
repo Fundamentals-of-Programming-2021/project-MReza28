@@ -13,13 +13,13 @@ int Distance_2D (int x1 , int y1 , int x2 , int y2){
 void numbertotexture (int number , TTF_Font* popfont , SDL_Color color , SDL_Texture** texture , SDL_Renderer* renderer) {
     char numbers[5];
     itoa(number , numbers , 10);
-    SDL_Surface* fontsurf = TTF_RenderText_Solid(popfont , numbers , color);
+    SDL_Surface* fontsurf = TTF_RenderText_Blended(popfont , numbers , color);
     *texture = SDL_CreateTextureFromSurface(renderer , fontsurf);
     SDL_FreeSurface(fontsurf);
 }
 
 void texttotexture (char* name , TTF_Font* popfont , SDL_Color color , SDL_Texture** texture , SDL_Renderer* renderer) {
-    SDL_Surface* fontsurf = TTF_RenderText_Solid(popfont , name , color);
+    SDL_Surface* fontsurf = TTF_RenderText_Blended(popfont , name , color);
     *texture = SDL_CreateTextureFromSurface(renderer , fontsurf);
     SDL_FreeSurface(fontsurf);
 }
