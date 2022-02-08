@@ -5,7 +5,7 @@ bool Game_pause () {
 
 }
 
-bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets , int playerspaceshiptype , int playercolor) {
+bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets , int playerspaceshiptype , int playercolor , bool load , char* fileadress) {
     long long int counter = 0;
     
     //creating backgrounfd
@@ -77,6 +77,11 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
 
     //creatin fonts
     TTF_Font* Populationfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 20);
+
+    /*if(load) {
+        Loadgame(fileadress , &howmanynations , &howmanyplanets , &howmanyvoidplanets , &index_spaceships , &index_attacks , &playercolor , &playerspaceshiptype , Nations , Planets , Spaceships , Attacks);
+        Planet_dis_finder_n(howmanyplanets , Planets , Planetsdistances);
+    }*/
     
     while (true)
     {
@@ -162,10 +167,12 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
 
         SDL_RenderPresent(renderer);
         counter++;
+
         SDL_Delay(1000/60);
     }
     
 
+    //Savegame("DATA/hello.txt" , howmanynations , howmanyplanets , howmanyvoidplanets ,index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations , Planets , Spaceships , Attacks);
 
 
 

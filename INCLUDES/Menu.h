@@ -130,7 +130,7 @@ bool Menu_main (SDL_Renderer* renderer){
             {
             case 1:
             {
-                if(!Game_start(renderer , 4 , 7 , 2 , 1 , 2)) {
+                if(!Game_start(renderer , 4 , 6 , 2 , 1 , 2 , false , "")) {
                     return false;
                 }     
                 break;
@@ -146,7 +146,7 @@ bool Menu_main (SDL_Renderer* renderer){
             
             case 3:
             {
-                if(!Game_start(renderer , 4 , 7 , 2 , 1 , 1)) {
+                if(!Game_start(renderer , 4 , 9 , 2 , 1 , 2 , true , "DATA/hello.txt")) {
                     return false;
                 }     
                 break;
