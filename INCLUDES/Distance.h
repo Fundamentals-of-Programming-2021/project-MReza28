@@ -18,6 +18,12 @@ void numbertotexture (int number , TTF_Font* popfont , SDL_Color color , SDL_Tex
     SDL_FreeSurface(fontsurf);
 }
 
+void texttotexture (char* name , TTF_Font* popfont , SDL_Color color , SDL_Texture** texture , SDL_Renderer* renderer) {
+    SDL_Surface* fontsurf = TTF_RenderText_Solid(popfont , name , color);
+    *texture = SDL_CreateTextureFromSurface(renderer , fontsurf);
+    SDL_FreeSurface(fontsurf);
+}
+
 void Creattexturefrompng (char* address , SDL_Texture** texture , SDL_Renderer* renderer){
     SDL_Surface* surf = IMG_Load(address);
     *texture = SDL_CreateTextureFromSurface(renderer , surf);

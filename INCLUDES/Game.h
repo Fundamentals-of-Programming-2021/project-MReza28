@@ -108,7 +108,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
             trigered = -1;
         }
         else if(event.button.button == SDL_BUTTON_RIGHT){
-            return true;
+            break;
         }
 
         SDL_RenderClear(renderer);

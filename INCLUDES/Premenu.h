@@ -49,7 +49,7 @@ bool blackingscreen (SDL_Renderer* renderer){
     blackrect.y = 0;
     blackrect.w = 1920;
     blackrect.h = 1080;
-    for (int i = 0; i < 60; i++)
+    for (int i = 0; i < 30; i++)
     {
         SDL_Event event;
         SDL_PollEvent(&event);
@@ -57,16 +57,13 @@ bool blackingscreen (SDL_Renderer* renderer){
         //quit handeling
         if (event.type == SDL_QUIT) return false;
 
-        Rectanglesetcolor(renderer , &blackrect , 0 , 0 , 0 , 12);
+        Rectanglesetcolor(renderer , &blackrect , 0 , 0 , 0 , 21);
         SDL_RenderCopy(renderer , NULL , NULL , &blackrect);
         SDL_RenderPresent(renderer);
         SDL_Delay(1000/60);
     }
     return true;
 }
-
-
-
 
 bool Menu_start (SDL_Renderer* renderer ) {
     int timecounter;

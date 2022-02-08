@@ -1,8 +1,29 @@
 #include "Main_includes.h"
-#include "Game.h"
+#include "Menuparts.h"
+
+void Exrtactingscore (char names[10][NAME_MAX_L] , int scores[10]) {
+    FILE* fscores = fopen("DATA/scores/scores.txt" , "r");
+    for (int i = 0; i < 10; i++)
+    {
+        fscanf(fscores , "%s%d%*c" , names[i] , &scores[i]);
+    }
+    
+}
+
+void Extractingcontinue () {
+
+}
+
+void Extractingsaves () {
+
+}
+
+void Extractingmaps () {
+
+}
 
 bool Menu_main (SDL_Renderer* renderer){
-    //creatin game logo
+    //creating game logo
     SDL_Texture* texturelogo;
     SDL_Rect rectlogo;
     Creattexturefrompng("IMAGES/Menu/gamelogo2.png" , &texturelogo , renderer);
@@ -46,6 +67,8 @@ bool Menu_main (SDL_Renderer* renderer){
     Creattexturefrompng("IMAGES/Menu/bec.png" , textures+2 , renderer);
     Button_creat(&bexit , 100 , 850 , textures);
 
+
+
     //creat black rects
     SDL_Rect blackleft;
     blackleft.h = 500;
@@ -53,6 +76,27 @@ bool Menu_main (SDL_Renderer* renderer){
     blackleft.x = 100;
     blackleft.y = 500;
     int blackleftcount = 254;
+
+
+    
+    ////exeracting datas
+
+
+    //extracting scores
+    char SCnames[10][NAME_MAX_L];
+    int SCscores[10];
+    Exrtactingscore(SCnames , SCscores);
+
+
+    //extracting continue
+
+
+    //extracting saves
+
+
+    //extracting maps
+
+
 
     while (true)
     {
@@ -110,7 +154,7 @@ bool Menu_main (SDL_Renderer* renderer){
 
             case 4:
             {
-                if(!Game_start(renderer , 4 , 7 , 2)) {
+                if(!Menu_score(renderer , SCnames , SCscores)) {
                     return false;
                 }     
                 break;

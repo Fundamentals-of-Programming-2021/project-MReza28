@@ -35,3 +35,6 @@
 #define GAME_H_E (980)
 #define GAME_W_S (100)
 #define GAME_W_E (1820)
+
+//Menu
+#define NAME_MAX_L (10)
