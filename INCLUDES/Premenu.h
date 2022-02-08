@@ -9,12 +9,6 @@ struct Button {
     int state;
 };
 
-void Creattexturefrompng (char* address , SDL_Texture** texture , SDL_Renderer* renderer){
-    SDL_Surface* surf = IMG_Load(address);
-    *texture = SDL_CreateTextureFromSurface(renderer , surf);
-    SDL_FreeSurface(surf);
-}
-
 void Rectanglesetcolor (SDL_Renderer* renderer , SDL_Rect* rect , Uint8 r , Uint8 g , Uint8 b , Uint8 a){
     SDL_SetRenderDrawColor(renderer , r , g , b , a);
     SDL_RenderFillRect(renderer , rect);

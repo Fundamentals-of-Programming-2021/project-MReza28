@@ -96,9 +96,11 @@ void Planet_alloc (int howmanyplayable , int howmanynations , int howmanyvoidpla
 }
 
 bool Planet_mouseon (int x , int y , struct Planet* planet){
-    if(Distance_2D(x , planet->x , y , planet->y) > (planet->rect.h)/2 + 1){
+    if(Distance_2D(x , y , planet->x , planet->y) < (planet->rect.h)/2 + 1){
+        planet->mouseon = true;
         return true;
     }
+    planet->mouseon = false;
     return false;
 }
 
@@ -114,7 +116,30 @@ void Planet_render (struct Planet* obj , SDL_Renderer* renderer , SDL_Texture **
     SDL_QueryTexture(fonttexture , NULL , NULL , &(obj->poprect.w) , &(obj->poprect.h) );
     SDL_RenderCopy(renderer , fonttexture , NULL , &(obj->poprect));
     SDL_DestroyTexture(fonttexture);
-    
+
+    if(obj->mouseon) {
+        SDL_Texture* bordertexture;
+        SDL_Rect borderrect;
+        Creattexturefrompng("IMAGES/planetborder.png" , &bordertexture , renderer);
+        borderrect.w = obj->rect.w + 20;
+        borderrect.h = obj->rect.h + 20;
+        borderrect.x = obj->rect.x - 10;
+        borderrect.y = obj->rect.y - 10;
+        SDL_RenderCopyEx(renderer , bordertexture , NULL , &borderrect , obj->angle , NULL , SDL_FLIP_NONE);
+        SDL_DestroyTexture(bordertexture);
+    }
+
+    if(obj->trigered) {
+        SDL_Texture* bordertexture;
+        SDL_Rect borderrect;
+        Creattexturefrompng("IMAGES/planettrigered.png" , &bordertexture , renderer);
+        borderrect.w = obj->rect.w + 20;
+        borderrect.h = obj->rect.h + 20;
+        borderrect.x = obj->rect.x - 10;
+        borderrect.y = obj->rect.y - 10;
+        SDL_RenderCopyEx(renderer , bordertexture , NULL , &borderrect , obj->angle , NULL , SDL_FLIP_NONE);
+        SDL_DestroyTexture(bordertexture);
+    }
 
     /*adding potion effect*/
 }
@@ -124,5 +149,4 @@ void Planet_render_n (struct Planet* planets , SDL_Renderer* renderer , SDL_Text
     {
         Planet_render(planets+i , renderer , planettextures , popfont);
     }
-    
 }

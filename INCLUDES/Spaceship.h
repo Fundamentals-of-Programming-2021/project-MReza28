@@ -73,8 +73,10 @@ void Spaceship_movement (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Te
     }
 }
 
-void Spaceship_render (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Texture **spaceshiptextures){
-    if(obj->moving){
-        Spaceship_movement(obj , renderer , spaceshiptextures);
+void Spaceship_render_n (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Texture **spaceshiptextures){
+    for(int i = 0 ; i < SPACESHIP_MAX ; i++) {
+        if((obj+i)->moving){
+            Spaceship_movement(obj+i , renderer , spaceshiptextures);
+        }
     }
 }

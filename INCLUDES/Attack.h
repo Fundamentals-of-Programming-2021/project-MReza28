@@ -24,17 +24,19 @@ void Attack_alloc (struct Attack* attacks){
 }
 
 void Attack_creat (struct Attack* attack , struct Planet* start , struct Planet* end){
-    attack->attacking = true;
-    
-    attack->nation = start->nation;
-    attack->start = start;
-    attack->end = end;
+    if(start->population > 0){
+        attack->attacking = true;
+        
+        attack->nation = start->nation;
+        attack->start = start;
+        attack->end = end;
 
-    /*can also change code to attack and reduse planet popluation one by one in attaking function and also here*/
+        /*can also change code to attack and reduse planet popluation one by one in attaking function and also here*/
 
-    attack->population = start->population;
-    attack->countdown = 0;
-    start->population = 0;
+        attack->population = start->population;
+        attack->countdown = 0;
+        start->population = 0;
+    }
 }
 
 void Attack_handling (struct Attack* attack , int* indexspaceship , struct Spaceship* spaceships , int PlanetsDistances[PLANET_MAX][PLANET_MAX]) {

@@ -10,7 +10,8 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     //creating nations
     struct Nation Nations[NATION_MAX];
     Nation_alloc(Nations , howmanynations);
-
+    ///////
+    Nations->color = 2;
     
     
     //creating planets
@@ -31,24 +32,38 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     {
         SDL_FreeSurface(Planetssurfaces[i]);
     }
-    
+    int trigered = -1;
+
 
     //creating distances
     int Planetsdistances[PLANET_MAX][PLANET_MAX];
     Planet_dis_finder_n(howmanyplanets , Planets , Planetsdistances);
-
+    
     
     
     //creatin splaceships
     struct Spaceship Spaceships[SPACESHIP_MAX];
-    int index_spaceships;
+    int index_spaceships = 0;
     Spaceship_alloc(Spaceships);
+
+    SDL_Surface* Spaceshipssurface[SPACESHIP_TYPES*4] = {
+        IMG_Load("IMAGES/Spaceships/1R.png") , IMG_Load("IMAGES/Spaceships/1B.png") , IMG_Load("IMAGES/Spaceships/1G.png") , IMG_Load("IMAGES/Spaceships/1Y.png")
+    };
+    SDL_Texture* Spaceshipstexture[SPACESHIP_TYPES*4];
+    for (int i = 0; i < SPACESHIP_TYPES*4; i++)
+    {
+        Spaceshipstexture[i] = SDL_CreateTextureFromSurface(renderer , Spaceshipssurface[i]);
+    }
+    for (int i = 0; i < SPACESHIP_TYPES*4 ; i++)
+    {
+        SDL_FreeSurface(Spaceshipssurface[i]);
+    }
 
     
     
     //creating attacka
     struct Attack Attacks[ATTACK_MAX];
-    int index_attacks;
+    int index_attacks = 0;
     Attack_alloc(Attacks);
 
     
@@ -56,33 +71,69 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     //creatin fonts
     TTF_Font* Populationfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 20);
     
-    
-    
     while (true)
     {
         SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                return false;
+        SDL_PollEvent(&event);
+        int mousex , mousey;
+        //quit handeling
+        if (event.type == SDL_QUIT) return false;
+        //mouse handling
+        Uint32 mouseb; 
+        mouseb = SDL_GetMouseState(&mousex , &mousey);
+
+        int mouseon = -1;
+        for(int i = 0 ; i < howmanyplanets ; i++) {
+            if(Planet_mouseon(mousex , mousey , (Planets+i))){
+                mouseon = i;
             }
         }
-        
-        SDL_RenderClear(renderer);
 
+        if((mouseon != -1) && trigered != mouseon && event.type == SDL_MOUSEBUTTONDOWN && mouseb == 1){
+            if(trigered == -1) {
+                (Planets+mouseon)->trigered = true;
+                trigered = mouseon;
+            }
+            else {
+                Attack_creat(Attacks+index_attacks , Planets+trigered , Planets+mouseon);
+                index_attacks++;
+                index_attacks%=ATTACK_MAX;
+                (Planets+trigered)->trigered = false;
+                trigered = -1;
+            }
+        }
+        else if (event.type == SDL_MOUSEBUTTONDOWN && mouseb == 1){
+            (Planets+trigered)->trigered = false;
+            trigered = -1;
+        }
+
+        SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer , background , NULL , NULL);
+        
+        for(int i = 0 ; i < ATTACK_MAX ; i++) Attack_handling(Attacks+i , &index_spaceships , Spaceships , Planetsdistances);
+
+        Spaceship_render_n(Spaceships , renderer , Spaceshipstexture);
+
         Planet_render_n(Planets , renderer , Planetstextures , howmanyplanets+howmanyvoidplanets , Populationfont);
 
+
         SDL_RenderPresent(renderer);
+
+        SDL_Delay(1000/60);
     }
     
 
 
 
 
-    //Destroyin datas
+    //Destroying datas
     TTF_CloseFont(Populationfont);
+
+    for (int i = 0; i < PLANET_TYPES + PLANET_TYPES_V ; i++){
+        SDL_DestroyTexture(Planetstextures[i]);
+    }
+    SDL_DestroyTexture(background);
+
 
     return true;
 }
