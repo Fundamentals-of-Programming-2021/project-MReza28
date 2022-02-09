@@ -130,7 +130,7 @@ bool Menu_main (SDL_Renderer* renderer){
             {
             case 1:
             {
-                if(!Game_start(renderer , 4 , 6 , 2 , 1 , 2 , "MRB" , false , "")) {
+                if(!Game_start(renderer , 4 , 6 , 2 , 1 , 1 , "MRB" , false , "")) {
                     return false;
                 }     
                 break;

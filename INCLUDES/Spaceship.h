@@ -44,13 +44,19 @@ void Spaceship_creat (struct Nation* nation , struct Planet* start , struct Plan
 
 void Spaceship_dis_checker (struct Spaceship *A , struct Spaceship *B) {
     if(Distance_1D(A->x , A->y , B->x , B->y) < SPACESHIP_MIN_DIS && A->nation->color != B->nation->color){
-        A->moving = false;
-        B->moving = false;
+        if(A->nation->potion != 3)
+            A->moving = false;
+        if(B->nation->potion != 3)
+            B->moving = false;
     }
 }
 
 void Spaceship_movement (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Texture **spaceshiptextures){
-    (obj->lifetime)++;
+    (obj->lifetime)+=2;
+
+    if(obj->nation->potion == 1) (obj->lifetime)+=2;
+    else if(obj->nation->potion == 2) (obj->lifetime)--;
+
     int distancemoved = ATTAK_SPEED*(obj->lifetime);
     //movement
     obj->x = (obj->start->x) + distancemoved*((obj->end->x) - (obj->start->x))/(obj->pathlength);
@@ -59,9 +65,12 @@ void Spaceship_movement (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Te
     obj->rect.x = obj->x - SPACESHIP_W/2;
     obj->rect.y = obj->y - SPACESHIP_H/2;
 
-    SDL_RenderCopyEx(renderer , *(spaceshiptextures+(obj->nation->color)-1 /*and adding  type of texture*/) , NULL ,  &(obj->rect) , obj->angle , NULL , SDL_FLIP_NONE);
+    SDL_RenderCopyEx(renderer , *((spaceshiptextures+(obj->nation->color)-1) + 7*(obj->nation->armytexture)) , NULL ,  &(obj->rect) , obj->angle , NULL , SDL_FLIP_NONE);
 
     /*adding rendercopy for potions*/
+    if(obj->nation->potion != 0 && obj->nation->potion<4){
+        SDL_RenderCopyEx(renderer , *(spaceshiptextures + 3 + 7*(obj->nation->armytexture) + (obj->nation->potion)) , NULL ,  &(obj->rect) , obj->angle , NULL , SDL_FLIP_NONE);
+    }
 
     if(distancemoved > obj->pathlength - obj->end->rect.w/2 + 5){
         obj->moving = false;
@@ -74,7 +83,22 @@ void Spaceship_movement (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Te
                 obj->end->nation = obj->nation;
             }
             else{
-                (obj->end->population)--;
+                if(obj->nation->potion == 3){
+                    if(obj->end->population == 0){
+                        (obj->end->population)++;
+                        obj->end->nation = obj->nation;
+                    }
+                    else if(obj->end->population == 1){
+                        (obj->end->population)--;
+                        obj->end->nation = obj->nation;
+                    }
+                    else{
+                        (obj->end->population)-=2;
+                    }
+                }
+                else {
+                    (obj->end->population)--;
+                }
             }
         }
     }

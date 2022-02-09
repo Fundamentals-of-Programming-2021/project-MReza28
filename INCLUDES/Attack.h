@@ -41,7 +41,7 @@ void Attack_creat (struct Attack* attack , struct Planet* start , struct Planet*
 
 void Attack_handling (struct Attack* attack , int* indexspaceship , struct Spaceship* spaceships , int PlanetsDistances[PLANET_MAX][PLANET_MAX]) {
     if(attack->attacking){
-        if(attack->countdown == 0){
+        if(attack->countdown < 0){
             Spaceship_creat(attack->nation , attack->start , attack->end , (spaceships + *indexspaceship) , PlanetsDistances);
             (*indexspaceship)++;
             (*indexspaceship)%=SPACESHIP_MAX;
@@ -55,7 +55,14 @@ void Attack_handling (struct Attack* attack , int* indexspaceship , struct Space
             }
         }
         else {
-            (attack->countdown)--;
+            (attack->countdown)-=2;
+            
+            if(attack->nation->potion == 2){
+                (attack->countdown)++;
+            }
+            else if(attack->nation->potion == 1){
+                (attack->countdown)-=2;
+            }
         }
     }
 }

@@ -9,13 +9,13 @@
 
 #define PLANET_TYPES (12)
 #define PLANET_TYPES_V (6)
-#define SPACESHIP_TYPES (1)
+#define SPACESHIP_TYPES (3)
 
 #define PLANET_POPULATION (20)
 #define POPULATION_SPEED (60)
 
-#define ATTAK_SPEED (5)
-#define EXITING_COUNTER (6)
+#define ATTAK_SPEED (2)
+#define EXITING_COUNTER (12)
 
 #define PLANET_ROTATION_SPEED (0.1)
 #define POPULATION_CAB (50)

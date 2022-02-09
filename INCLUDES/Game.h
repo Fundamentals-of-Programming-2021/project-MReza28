@@ -59,15 +59,20 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     int index_spaceships = 0;
     Spaceship_alloc(Spaceships);
 
-    SDL_Surface* Spaceshipssurface[SPACESHIP_TYPES*4] = {
-        IMG_Load("IMAGES/Spaceships/1R.png") , IMG_Load("IMAGES/Spaceships/1B.png") , IMG_Load("IMAGES/Spaceships/1G.png") , IMG_Load("IMAGES/Spaceships/1Y.png")
+    SDL_Surface* Spaceshipssurface[SPACESHIP_TYPES*7] = {
+        IMG_Load("IMAGES/Spaceships/1R.png") , IMG_Load("IMAGES/Spaceships/1B.png") , IMG_Load("IMAGES/Spaceships/1G.png") , IMG_Load("IMAGES/Spaceships/1Y.png") ,
+        IMG_Load("IMAGES/Spaceships/1Speed.png") , IMG_Load("IMAGES/Spaceships/1Slow.png") , IMG_Load("IMAGES/Spaceships/1strong.png") ,
+        IMG_Load("IMAGES/Spaceships/2R.png") , IMG_Load("IMAGES/Spaceships/2B.png") , IMG_Load("IMAGES/Spaceships/2G.png") , IMG_Load("IMAGES/Spaceships/2Y.png") ,
+        IMG_Load("IMAGES/Spaceships/2Speed.png") , IMG_Load("IMAGES/Spaceships/2Slow.png") , IMG_Load("IMAGES/Spaceships/2strong.png") ,
+        IMG_Load("IMAGES/Spaceships/3R.png") , IMG_Load("IMAGES/Spaceships/3B.png") , IMG_Load("IMAGES/Spaceships/3G.png") , IMG_Load("IMAGES/Spaceships/3Y.png") ,
+        IMG_Load("IMAGES/Spaceships/3Speed.png") , IMG_Load("IMAGES/Spaceships/3Slow.png") , IMG_Load("IMAGES/Spaceships/3strong.png")
     };
-    SDL_Texture* Spaceshipstexture[SPACESHIP_TYPES*4];
-    for (int i = 0; i < SPACESHIP_TYPES*4; i++)
+    SDL_Texture* Spaceshipstexture[SPACESHIP_TYPES*7];
+    for (int i = 0; i < SPACESHIP_TYPES*7; i++)
     {
         Spaceshipstexture[i] = SDL_CreateTextureFromSurface(renderer , Spaceshipssurface[i]);
     }
-    for (int i = 0; i < SPACESHIP_TYPES*4 ; i++)
+    for (int i = 0; i < SPACESHIP_TYPES*7 ; i++)
     {
         SDL_FreeSurface(Spaceshipssurface[i]);
     }
@@ -93,8 +98,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
         Loadgame(fileadress , &howmanynations , &howmanyplanets , &howmanyvoidplanets , &index_spaceships , &index_attacks , &playercolor , &playerspaceshiptype , Nations , Planets , Spaceships , Attacks);
         Planet_dis_finder_n(howmanyplanets , Planets , Planetsdistances);
     }*/
-    
-    
+
     
     
     while (true)
@@ -198,7 +202,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
         SDL_DestroyTexture(Planetstextures[i]);
     }
     SDL_DestroyTexture(background);
-    for (int i = 0; i < SPACESHIP_TYPES*4 ; i++){
+    for (int i = 0; i < SPACESHIP_TYPES*7 ; i++){
         SDL_DestroyTexture(Spaceshipstexture[i]);
     }
 
