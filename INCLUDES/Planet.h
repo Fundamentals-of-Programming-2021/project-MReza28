@@ -96,7 +96,7 @@ void Planet_alloc (int howmanyplayable , int howmanynations , int howmanyvoidpla
         (planets+i)->potrect.y = (planets+i)->poprect.y + (planets+i)->rect.w - 27;
         //adding namrects
         (planets+i)->namrect.x = (planets+i)->poprect.x + 5;
-        (planets+i)->namrect.y = ((planets+i)->poprect.y + (planets+i)->potrect.y)/2;
+        (planets+i)->namrect.y = ((planets+i)->poprect.y + (planets+i)->potrect.y)/2 + 3;
 
         /*check if alghoritem last long try another pattern fro the brginning*/
     }
@@ -114,6 +114,10 @@ bool Planet_mouseon (int x , int y , struct Planet* planet){
 void Planet_render (struct Planet* obj , SDL_Renderer* renderer , SDL_Texture **planettextures , TTF_Font* popfont , TTF_Font* charfont , SDL_Color* colors , char usernames[NAME_MAX][NAME_MAX_L]) {
     SDL_RenderCopyEx(renderer , *(planettextures + obj->typeoftexture) /*adding color of nation*/ , NULL , &(obj->rect) , obj->angle , NULL , SDL_FLIP_NONE);
     obj->angle += PLANET_ROTATION_SPEED;
+    if(obj->nation->potion == 4){
+        obj->angle += 2*PLANET_ROTATION_SPEED;
+    }
+
     if(obj->angle > 360) obj->angle-=360.0;
     
 
@@ -139,6 +143,10 @@ void Planet_render (struct Planet* obj , SDL_Renderer* renderer , SDL_Texture **
         borderrect.y = obj->rect.y - 10;
         SDL_RenderCopyEx(renderer , bordertexture , NULL , &borderrect , obj->angle , NULL , SDL_FLIP_NONE);
         SDL_DestroyTexture(bordertexture);
+    }
+
+    if(obj->nation->potion == 5) {
+        SDL_RenderCopy(renderer , *(planettextures+18) , NULL , &(obj->rect));
     }
 
     

@@ -66,3 +66,75 @@ void Attack_handling (struct Attack* attack , int* indexspaceship , struct Space
         }
     }
 }
+
+struct Potion
+{
+    bool show;
+    int type;
+    
+    int life;
+
+    SDL_Rect prect;
+    int x;
+    int y;
+};
+
+void Potion_alloc (struct Potion* potions) {
+    for(int i = 0 ; i < POTION_MAX ; i++){
+        (potions+i)->show = false;
+        (potions+i)->type = 0;
+    }
+}
+
+void Potion_Creat (struct Potion* potions , int* pindex , struct Planet* planets , int howmanyplanets)
+{
+    (potions+*pindex)->show = true;
+    (potions+*pindex)->type = rand()%5+1;
+    (potions+*pindex)->life = POTION_LIFE;
+
+    srand(time(0));
+    int s , e;
+    
+    s = rand()%howmanyplanets;
+    while(true){
+        e = rand()%howmanyplanets;
+        if(e!=s) break;
+    }
+
+    int place = (rand()%8) + 4;
+    (potions+*pindex)->x = (planets+s)->x + (((planets+e)->x - (planets+s)->x)*place)/15;
+    (potions+*pindex)->y = (planets+s)->y + (((planets+e)->y - (planets+s)->y)*place)/15;
+
+    (potions+(*pindex))->prect.x = (potions+(*pindex))->x - 24;
+    (potions+(*pindex))->prect.y = (potions+(*pindex))->y - 24;
+
+    (potions+*pindex)->prect.w = 48;
+    (potions+*pindex)->prect.h = 48;
+
+    (*pindex)++;
+    if(*pindex == POTION_MAX){
+        (*pindex)%=POTION_MAX;
+    }
+};
+
+void Potion_render(SDL_Renderer* renderer , struct Potion* potions , SDL_Texture** ptextures) {
+    for (int i = 0; i < POTION_MAX; i++)
+    {
+        if((potions+i)->show) {
+            SDL_RenderCopy(renderer , *(ptextures+(potions+i)->type-1) , NULL , &(potions+i)->prect);
+        }
+    }
+}
+
+void Potion_handling (struct Potion* potions , struct Spaceship* spacesships , int* movingsps , int howmanysps) {
+    for (int i = 0; i < howmanysps; i++)
+    {
+        for(int j = 0 ; j < POTION_MAX ; j++){
+            if( (potions+j)->show && (spacesships + *(movingsps + i))->nation->potion == 0 && Distance_1D((spacesships+(*(movingsps+i)))->x , (spacesships+(*(movingsps+i)))->y , (potions+j)->x , (potions+j)->y) < Potion_SPSH_MIN_DIS){
+                (potions+j)->show = false;
+                (spacesships+*(movingsps + i))->nation->potion = (potions+j)->type;
+                (spacesships+*(movingsps + i))->nation->potiontime = Potion_time;
+            }   
+        }
+    }
+}

@@ -3,6 +3,12 @@
 #define NATION_MAX (6)
 #define SPACESHIP_MAX (500)
 #define ATTACK_MAX (20)
+#define POTION_MAX (50)
+
+#define POTION_LIFE (120000)
+#define POTION_PROB (540)
+#define Potion_SPSH_MIN_DIS (24)
+#define Potion_time (5)
 
 #define PLANET_MIN_DIS (300)
 #define SPACESHIP_MIN_DIS (24)

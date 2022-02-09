@@ -6,7 +6,8 @@ bool Game_pause () {
 }
 
 bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets , int playerspaceshiptype , int playercolor , char* username , bool load , char* fileadress) {
-    long long int counter = 0;
+    long long int counter = 1;
+    srand(time(0));
     
     //creating backgrounfd
     SDL_Texture* background;
@@ -23,17 +24,18 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     struct Planet Planets[PLANET_MAX];
     Planet_alloc(howmanyplanets , howmanynations , howmanyvoidplanets , Planets , Nations);
 
-    SDL_Surface* Planetssurfaces[18] = {
+    SDL_Surface* Planetssurfaces[PLANET_TYPES + PLANET_TYPES_V+ 1] = {
         IMG_Load("IMAGES/Planets/a1.png") , IMG_Load("IMAGES/Planets/a2.png") , IMG_Load("IMAGES/Planets/a3.png") , IMG_Load("IMAGES/Planets/a4.png") , IMG_Load("IMAGES/Planets/a5.png") , IMG_Load("IMAGES/Planets/a6.png") ,
         IMG_Load("IMAGES/Planets/p1.png") , IMG_Load("IMAGES/Planets/p2.png") , IMG_Load("IMAGES/Planets/p3.png") , IMG_Load("IMAGES/Planets/p4.png") , IMG_Load("IMAGES/Planets/p5.png") , IMG_Load("IMAGES/Planets/p6.png") ,
-        IMG_Load("IMAGES/Planets/p7.png") , IMG_Load("IMAGES/Planets/p8.png") , IMG_Load("IMAGES/Planets/p9.png") , IMG_Load("IMAGES/Planets/p10.png") , IMG_Load("IMAGES/Planets/p11.png") , IMG_Load("IMAGES/Planets/p12.png")
+        IMG_Load("IMAGES/Planets/p7.png") , IMG_Load("IMAGES/Planets/p8.png") , IMG_Load("IMAGES/Planets/p9.png") , IMG_Load("IMAGES/Planets/p10.png") , IMG_Load("IMAGES/Planets/p11.png") , IMG_Load("IMAGES/Planets/p12.png") ,
+        IMG_Load("IMAGES/Planets/cab.png")
     };
-    SDL_Texture* Planetstextures[PLANET_TYPES + PLANET_TYPES_V];
-    for (int i = 0; i < PLANET_TYPES + PLANET_TYPES_V ; i++)
+    SDL_Texture* Planetstextures[PLANET_TYPES + PLANET_TYPES_V + 1];
+    for (int i = 0; i < PLANET_TYPES + PLANET_TYPES_V + 1 ; i++)
     {
         Planetstextures[i] = SDL_CreateTextureFromSurface(renderer , Planetssurfaces[i]);
     }
-    for (int i = 0; i < PLANET_TYPES + PLANET_TYPES_V; i++)
+    for (int i = 0; i < PLANET_TYPES + PLANET_TYPES_V + 1 ; i++)
     {
         SDL_FreeSurface(Planetssurfaces[i]);
     }
@@ -88,6 +90,24 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
 
     
 
+    //creating potins
+    struct Potion Potions[POTION_MAX];
+    int index_potions = 0;
+    Potion_alloc(Potions);
+
+    SDL_Surface* Potionssurface[5] = {
+        IMG_Load("IMAGES/Potions/fast.png") , IMG_Load("IMAGES/Potions/slow.png") , IMG_Load("IMAGES/Potions/strong.png") , IMG_Load("IMAGES/Potions/fastp.png") , IMG_Load("IMAGES/Potions/cab.png")
+    };
+    SDL_Texture* Potionstexture[5];
+    for (int i = 0; i < 5; i++)
+    {
+        Potionstexture[i] = SDL_CreateTextureFromSurface(renderer ,Potionssurface[i]);
+        SDL_FreeSurface(Potionssurface[i]);
+    }
+    
+
+
+
     //creatin fonts
     TTF_Font* Populationfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 20);
     TTF_Font* charfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 14);
@@ -99,8 +119,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
         Planet_dis_finder_n(howmanyplanets , Planets , Planetsdistances);
     }*/
 
-    
-    
+
     while (true)
     {
         SDL_Event event;
@@ -154,16 +173,6 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
             }
         }
 
-        //increasing population of planets
-        if(counter%POPULATION_SPEED == 0) {
-            for (int i = 0; i < howmanyplanets ; i++)
-            {
-                if(Planets[i].population < POPULATION_CAB && Planets[i].nation->alive){
-                    Planets[i].population++;
-                }
-            }
-        }
-        
         for (size_t i = 0; i < movingships_n; i++)
         {
             for (int j = 0; j < movingships_n; j++)
@@ -171,14 +180,53 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
                 Spaceship_dis_checker(Spaceships + movingships[i] , Spaceships + movingships[j]);
             }
         }
+
+        //increasing population of planets
+        if(counter%POPULATION_SPEED == 0) {
+            for (int i = 0; i < howmanyplanets ; i++)
+            {
+                if(Planets[i].population < POPULATION_CAB && Planets[i].nation->alive){
+                    Planets[i].population++;
+                    if(Planets[i].nation->potion == 4){
+                        Planets[i].population++;
+                    }
+                }
+                else if(Planets[i].nation->potion == 5){
+                    Planets[i].population++;
+                }
+            }
+        }
+
+        //handelinh potions
+        if(counter%60==0){
+            for (int i = 1 ; i < howmanynations+1 ; i++){
+                if((Nations+i)->potiontime > 0){
+                    (Nations+i)->potiontime--;
+                    if((Nations+i)->potiontime == 0) {
+                        (Nations+i)->potion = 0;
+                    }
+                }
+            }
+        }
+
+        if(rand()%POTION_PROB == 0) {
+            Potion_Creat(Potions , &index_potions , Planets , howmanyplanets);
+        }
+
+        Potion_handling(Potions , Spaceships , movingships , movingships_n);
         
 
-        SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer , background , NULL , NULL);
-        
+
+        //attack handeling
         for(int i = 0 ; i < ATTACK_MAX ; i++) Attack_handling(Attacks+i , &index_spaceships , Spaceships , Planetsdistances);
 
+        SDL_RenderClear(renderer);
+
+        SDL_RenderCopy(renderer , background , NULL , NULL);
+
         Spaceship_render_n(Spaceships , renderer , Spaceshipstexture);
+
+        Potion_render(renderer , Potions , Potionstexture);
 
         Planet_render_n(Planets , renderer , Planetstextures , howmanyplanets+howmanyvoidplanets , Populationfont , charfont , colors , usernames);
 
@@ -189,7 +237,6 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
         SDL_Delay(1000/60);
     }
     
-
     //Savegame("DATA/hello.txt" , howmanynations , howmanyplanets , howmanyvoidplanets ,index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations , Planets , Spaceships , Attacks);
 
 
@@ -198,12 +245,15 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     TTF_CloseFont(Populationfont);
     TTF_CloseFont(charfont);
 
-    for (int i = 0; i < PLANET_TYPES + PLANET_TYPES_V ; i++){
+    for (int i = 0; i < PLANET_TYPES + PLANET_TYPES_V + 1 ; i++){
         SDL_DestroyTexture(Planetstextures[i]);
     }
     SDL_DestroyTexture(background);
     for (int i = 0; i < SPACESHIP_TYPES*7 ; i++){
         SDL_DestroyTexture(Spaceshipstexture[i]);
+    }
+    for(int i = 0 ; i < 5 ; i++) {
+        SDL_DestroyTexture(Potionstexture[i]);
     }
 
     return true;
