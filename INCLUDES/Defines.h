@@ -6,7 +6,7 @@
 #define POTION_MAX (50)
 
 #define POTION_LIFE (120000)
-#define POTION_PROB (540)
+#define POTION_PROB (30)
 #define Potion_SPSH_MIN_DIS (24)
 #define Potion_time (5)
 

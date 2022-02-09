@@ -197,6 +197,42 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
             }
         }
 
+        //nations population handling
+        for (int i = 0; i < NATION_MAX; i++)
+        {
+            if(Nations[i].alive){
+                Nations[i].population = 0;
+            }
+        }
+        
+        for (int i = 0; i < SPACESHIP_MAX; i++)
+        {
+            if(Spaceships[i].moving){
+                Nations[Spaceships[i].nation->id].population++;
+            }
+        }
+        for (int i = 0; i < ATTACK_MAX; i++)
+        {
+            if(Attacks[i].attacking){
+                Nations[Attacks[i].nation->id].population += Attacks[i].population;
+            }
+        }
+        for (int i = 0; i < howmanyplanets; i++)
+        {
+            Nations[Planets[i].nation->id].population += Planets[i].population;
+        }
+        
+        for (int i = 1; i < 5; i++)
+        {
+            if(Nations[i].population == 0){
+                Nations[i].alive = false;
+            }
+        }
+        
+        
+
+
+
         //handelinh potions
         if(counter%60==0){
             for (int i = 1 ; i < howmanynations+1 ; i++){
@@ -207,11 +243,12 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
                     }
                 }
             }
+            //cerating potion
+            if(rand()%POTION_PROB == 0) {
+                Potion_Creat(Potions , &index_potions , Planets , howmanyplanets);
+            }
         }
 
-        if(rand()%POTION_PROB == 0) {
-            Potion_Creat(Potions , &index_potions , Planets , howmanyplanets);
-        }
 
         Potion_handling(Potions , Spaceships , movingships , movingships_n);
         

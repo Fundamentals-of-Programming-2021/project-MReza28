@@ -117,7 +117,7 @@ bool Menu_main (SDL_Renderer* renderer){
         if(Button_mouseon(mousex , mousey , &bscores)) mouseon = 4;
         if(Button_mouseon(mousex , mousey , &bexit)) mouseon = 5;
         
-        if(event.button.button == SDL_BUTTON_LEFT){
+        if(event.button.button == SDL_BUTTON_LEFT && event.type == SDL_MOUSEBUTTONDOWN){
             //blacking screen
             if(mouseon != 0){
                 if(!blackingscreen(renderer)){
