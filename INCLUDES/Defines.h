@@ -38,4 +38,5 @@
 
 //Menu
 #define NAME_MAX_L (17)
+#define NAME_MAX (10)
 #define TEXT_COLOR {220 , 220 , 230}

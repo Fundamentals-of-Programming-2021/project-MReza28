@@ -5,7 +5,7 @@ bool Game_pause () {
 
 }
 
-bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets , int playerspaceshiptype , int playercolor , bool load , char* fileadress) {
+bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets , int playerspaceshiptype , int playercolor , char* username , bool load , char* fileadress) {
     long long int counter = 0;
     
     //creating backgrounfd
@@ -16,8 +16,9 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     //creating nations
     struct Nation Nations[NATION_MAX];
     Nation_alloc(Nations , howmanynations , playercolor);
-    
-    
+    char usernames[NAME_MAX][NAME_MAX_L] = {"you" , "LetMeMakeNewOne" , "mrb82228" , "Dream" , " DUDE0011" , "StrongAI" , "BOT05" , "YouShallDie" , "ARASH" , "HolyFatherJose"};
+    strcpy(usernames[0] , username);
+
     //creating planets
     struct Planet Planets[PLANET_MAX];
     Planet_alloc(howmanyplanets , howmanynations , howmanyvoidplanets , Planets , Nations);
@@ -38,8 +39,12 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     }
     int trigered = -1;
     
+
+
     //font colors
-    SDL_Color colors[5] = {{255,255,255} , {255,0,0} , {0,0,255} , {0,255,0} , {255,255,0}};
+    SDL_Color colors[5] = {TEXT_COLOR , {255,0,0} , {0,150,255} , {0,255,0} , {255,255,0}};
+
+
 
 
     //creating distances
@@ -47,6 +52,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     Planet_dis_finder_n(howmanyplanets , Planets , Planetsdistances);
     
     
+
     
     //creatin splaceships
     struct Spaceship Spaceships[SPACESHIP_MAX];
@@ -67,6 +73,8 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     }
 
     
+
+
     
     //creating attacka
     struct Attack Attacks[ATTACK_MAX];
@@ -77,11 +85,17 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
 
     //creatin fonts
     TTF_Font* Populationfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 20);
+    TTF_Font* charfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 14);
+
+
 
     /*if(load) {
         Loadgame(fileadress , &howmanynations , &howmanyplanets , &howmanyvoidplanets , &index_spaceships , &index_attacks , &playercolor , &playerspaceshiptype , Nations , Planets , Spaceships , Attacks);
         Planet_dis_finder_n(howmanyplanets , Planets , Planetsdistances);
     }*/
+    
+    
+    
     
     while (true)
     {
@@ -162,7 +176,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
 
         Spaceship_render_n(Spaceships , renderer , Spaceshipstexture);
 
-        Planet_render_n(Planets , renderer , Planetstextures , howmanyplanets+howmanyvoidplanets , Populationfont , colors);
+        Planet_render_n(Planets , renderer , Planetstextures , howmanyplanets+howmanyvoidplanets , Populationfont , charfont , colors , usernames);
 
 
         SDL_RenderPresent(renderer);
@@ -178,6 +192,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
 
     //Destroying datas
     TTF_CloseFont(Populationfont);
+    TTF_CloseFont(charfont);
 
     for (int i = 0; i < PLANET_TYPES + PLANET_TYPES_V ; i++){
         SDL_DestroyTexture(Planetstextures[i]);
