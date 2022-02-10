@@ -190,6 +190,34 @@ void Loadgame (
 
 
 
+void Exrtactingscore (char names[SCsaves][NAME_MAX_L] , int scores[SCsaves]) {
+    FILE* fscores = fopen("DATA/scores/scores.txt" , "r");
+    scores[0] = 0;
+    for (int i = 0; i < SCsaves; i++)
+    {
+        fscanf(fscores , "%[^\n]" , names[i+1]);
+        if(names[i+1][0] == '`') break;
+        fscanf(fscores , "%d%*c" , &scores[i+1]);
+        scores[0]++;
+    }
+    fclose(fscores);
+}
+
+void Extractingcontinue () {
+
+}
+
+void Extractingsaves () {
+
+}
+
+void Extractingmaps () {
+
+}
+
+
+
+
 
 
 bool Menu_start (SDL_Renderer* renderer ) {

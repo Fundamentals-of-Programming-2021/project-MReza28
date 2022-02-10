@@ -46,3 +46,7 @@
 #define NAME_MAX_L (17)
 #define NAME_MAX (10)
 #define TEXT_COLOR {220 , 220 , 230}
+
+#define SCsaves (100)
+#define MPOS (1000000)
+#define MNEG (-1000000)

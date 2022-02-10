@@ -29,3 +29,26 @@ void Creattexturefrompng (char* address , SDL_Texture** texture , SDL_Renderer* 
     *texture = SDL_CreateTextureFromSurface(renderer , surf);
     SDL_FreeSurface(surf);
 }
+
+void SCsort (int SCscores[SCsaves] , int SCmax[10]) {
+    for (int i = 0; i < 10; i++)
+    {
+        int max = -50000;
+        int maxplace;
+        for (int j = 1; j <= SCscores[0]; j++)
+        {   
+            if(max < SCscores[j]){
+                bool check = false;
+                for (int k = 0; k < i; k++)
+                {
+                    if(j == SCmax[k]) check = true;
+                }
+                if(check) continue;
+
+                max = SCscores[j];
+                maxplace = j;
+            }
+        }
+        SCmax[i] = maxplace;
+    }
+}

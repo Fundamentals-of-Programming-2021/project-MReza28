@@ -1,26 +1,6 @@
 #include "Main_includes.h"
 #include "Menuparts.h"
 
-void Exrtactingscore (char names[10][NAME_MAX_L] , int scores[10]) {
-    FILE* fscores = fopen("DATA/scores/scores.txt" , "r");
-    for (int i = 0; i < 10; i++)
-    {
-        fscanf(fscores , "%[^\n]%d%*c" , names[i] , &scores[i]);
-    }
-    fclose(fscores);
-}
-
-void Extractingcontinue () {
-
-}
-
-void Extractingsaves () {
-
-}
-
-void Extractingmaps () {
-
-}
 
 bool Menu_main (SDL_Renderer* renderer){
     //creating game logo
@@ -77,6 +57,13 @@ bool Menu_main (SDL_Renderer* renderer){
     blackleft.y = 500;
     int blackleftcount = 254;
 
+    SDL_Rect blackup;
+    blackup.h = 400;
+    blackup.w = 1000;
+    blackup.x = 500;
+    blackup.y = 50;
+    int blackupcount = -1;
+
 
     
     ////exeracting datas
@@ -124,13 +111,14 @@ bool Menu_main (SDL_Renderer* renderer){
                     return false;
                 }
                 blackleftcount = 254;
+                blackupcount = 254;
             }
 
             switch (mouseon)
             {
             case 1:
             {
-                if(!Game_start(renderer , 4 , 6 , 2 , 1 , 1 , "MRB" , false , "")) {
+                if(Game_start(renderer , 4 , 6 , 2 , 1 , 1 , "MRB" , false , "") == MNEG) {
                     return false;
                 }     
                 break;
@@ -185,7 +173,15 @@ bool Menu_main (SDL_Renderer* renderer){
         if(blackleftcount > -1){
             Rectanglesetcolor(renderer , &blackleft , 0 , 0 , 0 , blackleftcount);
             SDL_RenderCopy(renderer , NULL , NULL , &blackleft);
-            blackleftcount-=2;
+            if(blackupcount<0){
+                blackleftcount-=2;
+            }
+        }
+
+        if(blackupcount > -1){
+            Rectanglesetcolor(renderer , &blackup , 0 , 0 , 0 , blackupcount);
+            SDL_RenderCopy(renderer , NULL , NULL , &blackup);
+            blackupcount-=4;
         }
 
         SDL_RenderPresent(renderer);

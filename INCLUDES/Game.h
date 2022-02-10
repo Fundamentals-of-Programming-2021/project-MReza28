@@ -1,12 +1,126 @@
 #include "Main_includes.h"
 #include "Premenu.h"
 
-bool Game_pause () {
+int Game_pause (SDL_Renderer* renderer , char Username[NAME_MAX_L] , int score) {
+    SDL_Texture* arrowstex[9];
+    Creattexturefrompng("IMAGES/Game/smt.png" , arrowstex+0 , renderer);
+    Creattexturefrompng("IMAGES/Game/smf.png" , arrowstex+1 , renderer);
+    Creattexturefrompng("IMAGES/Game/smc.png" , arrowstex+2 , renderer);
 
+    Creattexturefrompng("IMAGES/Game/sgt.png" , arrowstex+3 , renderer);
+    Creattexturefrompng("IMAGES/Game/sgf.png" , arrowstex+4 , renderer);
+    Creattexturefrompng("IMAGES/Game/sgc.png" , arrowstex+5 , renderer);
+
+    Creattexturefrompng("IMAGES/Game/mmt.png" , arrowstex+6 , renderer);
+    Creattexturefrompng("IMAGES/Game/mmf.png" , arrowstex+7 , renderer);
+    Creattexturefrompng("IMAGES/Game/mmc.png" , arrowstex+8 , renderer);
+
+    struct Button pause[3];
+    Button_creat(pause , 960-210/2 , 500 , arrowstex);
+    Button_creat(pause+1 , 960-242/2 , 600 , arrowstex+3);
+    Button_creat(pause+2 , 960-252/2 , 700 , arrowstex+6);
+
+    //blackscreen
+    SDL_Rect blackleft;
+    blackleft.h = 1080;
+    blackleft.w = 1920;
+    blackleft.x = 0;
+    blackleft.y = 0;
+    int blackleftcount = 254;
+
+    while (true)
+    {
+        SDL_Event event;
+        SDL_PollEvent(&event);
+        //mouse handling
+        int mousex , mousey;
+        Uint32 mouseb; 
+        mouseb = SDL_GetMouseState(&mousex , &mousey);
+
+        int mouseon = 0;
+        for(int i = 0 ; i < 3 ; i++){
+            if(Button_mouseon(mousex , mousey , pause+i)) mouseon = i+1;
+        }
+
+        if(event.type == SDL_QUIT){
+            return MNEG;
+        }
+        if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT)
+        {
+            if(!blackingscreen(renderer)){
+                    return MNEG;
+            }
+            for(int i = 0 ; i < 9 ; i++){
+                SDL_DestroyTexture(arrowstex[i]);
+            }
+            return 1;
+            break;
+        }
+        else if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
+            switch (mouseon)
+            {
+            case 1:{
+                //save map
+                break;
+            }
+            
+            case 2:{
+                //save game
+                break;
+            }
+            
+            case 3:{
+                if(!blackingscreen(renderer)){
+                    return MNEG;
+                }
+                for(int i = 0 ; i < 9 ; i++){
+                    SDL_DestroyTexture(arrowstex[i]);
+                }
+                return 0;
+                break;
+            }
+
+            }
+        }
+
+
+        SDL_RenderClear(renderer);
+
+        for (int i = 0; i < 3; i++)
+        {
+            Button_render(pause+i , renderer);
+        }
+
+        //blackscreen
+        if(blackleftcount > -1){
+            Rectanglesetcolor(renderer , &blackleft , 0 , 0 , 0 , blackleftcount);
+            SDL_RenderCopy(renderer , NULL , NULL , &blackleft);
+            blackleftcount-=3;
+        }
+
+        SDL_RenderPresent(renderer);
+    }
+
+    return true;
 }
 
-bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets , int playerspaceshiptype , int playercolor , char* username , bool load , char* fileadress) {
+bool Game_done (char Username[NAME_MAX_L] , int score) {
+    char names[SCsaves][NAME_MAX_L];
+    int scores[SCsaves];
+    Exrtactingscore(names , scores);
+
+    for (int i = 1; i < scores[0]; i++)
+    {
+        
+    }
+    
+}
+
+//MNEG for quit aand MPOS for menu
+int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets , int playerspaceshiptype , int playercolor , char* username , bool load , char* fileadress) {
     long long int counter = 1;
+    int score;
+    bool win;
     srand(time(0));
     
     //creating backgrounfd
@@ -19,6 +133,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     Nation_alloc(Nations , howmanynations , playercolor);
     char usernames[NAME_MAX][NAME_MAX_L] = {"you" , "LetMeMakeNewOne" , "mrb82228" , "Dream" , " DUDE0011" , "StrongAI" , "BOT05" , "YouShallDie" , "ARASH" , "HolyFatherJose"};
     strcpy(usernames[0] , username);
+    Nations[1].armytexture = playerspaceshiptype;
 
     //creating planets
     struct Planet Planets[PLANET_MAX];
@@ -73,12 +188,8 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
     for (int i = 0; i < SPACESHIP_TYPES*7; i++)
     {
         Spaceshipstexture[i] = SDL_CreateTextureFromSurface(renderer , Spaceshipssurface[i]);
-    }
-    for (int i = 0; i < SPACESHIP_TYPES*7 ; i++)
-    {
         SDL_FreeSurface(Spaceshipssurface[i]);
     }
-
     
 
 
@@ -126,7 +237,7 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
         SDL_PollEvent(&event);
         int mousex , mousey;
         //quit handeling
-        if (event.type == SDL_QUIT) return false;
+        if (event.type == SDL_QUIT) return MNEG;
         //mouse handling
         Uint32 mouseb; 
         mouseb = SDL_GetMouseState(&mousex , &mousey);
@@ -157,7 +268,29 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
                 trigered = -1;
             }
             else if(event.button.button == SDL_BUTTON_RIGHT){
-                break;
+                if(!blackingscreen(renderer)){
+                    return MNEG;
+                }
+                int k = Game_pause(renderer , username , score);
+                if(k == 0){
+                    TTF_CloseFont(Populationfont);
+                    TTF_CloseFont(charfont);
+                    for (int i = 0; i < PLANET_TYPES + PLANET_TYPES_V + 1 ; i++){
+                        SDL_DestroyTexture(Planetstextures[i]);
+                    }
+                    SDL_DestroyTexture(background);
+                    for (int i = 0; i < SPACESHIP_TYPES*7 ; i++){
+                        SDL_DestroyTexture(Spaceshipstexture[i]);
+                    }
+                    for(int i = 0 ; i < 5 ; i++) {
+                        SDL_DestroyTexture(Potionstexture[i]);
+                    }
+                    return MPOS;
+                }
+
+                else if(k == MNEG){
+                    return MNEG;
+                }
             }
         }
 
@@ -252,6 +385,21 @@ bool Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanet
 
         Potion_handling(Potions , Spaceships , movingships , movingships_n);
         
+
+
+        //GAME ENDING
+        if(!Nations[1].alive){
+            win = false;
+            blackingscreen(renderer);
+            break;
+        }
+        else if(!Nations[2].alive && !Nations[3].alive && !Nations[4].alive){
+            win = true;
+            blackingscreen(renderer);
+            break;
+        }
+
+
 
 
         //attack handeling

@@ -16,6 +16,8 @@ bool Menu_newgame (SDL_Renderer* renderer) {
     int Indexusername = 0;
 
 
+
+
     //rects
     SDL_Rect NG[5];
     //username
@@ -26,6 +28,11 @@ bool Menu_newgame (SDL_Renderer* renderer) {
     texttotexture("Type Your Name To Start Game" , Othertext , Textcolor , &Username_up , renderer);
     SDL_QueryTexture(Username_up , NULL , NULL , &NG[1].w , &NG[1].h);
     NG[1].x = 1920/2 - NG[1].w/2;
+    //spaceship place
+    NG[4].w = 240;
+    NG[4].h = NG[4].w;
+    NG[4].y = 320+200 - NG[4].w/2;
+    NG[4].x = 960 - NG[4].w/2;
 
 
 
@@ -76,6 +83,26 @@ bool Menu_newgame (SDL_Renderer* renderer) {
 
 
 
+    //spaceship creat
+    SDL_Surface* Spaceshipssurface[SPACESHIP_TYPES*7] = {
+        IMG_Load("IMAGES/Spaceships/1R.png") , IMG_Load("IMAGES/Spaceships/1B.png") , IMG_Load("IMAGES/Spaceships/1G.png") , IMG_Load("IMAGES/Spaceships/1Y.png") ,
+        IMG_Load("IMAGES/Spaceships/1Speed.png") , IMG_Load("IMAGES/Spaceships/1Slow.png") , IMG_Load("IMAGES/Spaceships/1strong.png") ,
+        IMG_Load("IMAGES/Spaceships/2R.png") , IMG_Load("IMAGES/Spaceships/2B.png") , IMG_Load("IMAGES/Spaceships/2G.png") , IMG_Load("IMAGES/Spaceships/2Y.png") ,
+        IMG_Load("IMAGES/Spaceships/2Speed.png") , IMG_Load("IMAGES/Spaceships/2Slow.png") , IMG_Load("IMAGES/Spaceships/2strong.png") ,
+        IMG_Load("IMAGES/Spaceships/3R.png") , IMG_Load("IMAGES/Spaceships/3B.png") , IMG_Load("IMAGES/Spaceships/3G.png") , IMG_Load("IMAGES/Spaceships/3Y.png") ,
+        IMG_Load("IMAGES/Spaceships/3Speed.png") , IMG_Load("IMAGES/Spaceships/3Slow.png") , IMG_Load("IMAGES/Spaceships/3strong.png")
+    };
+    SDL_Texture* Spaceshipstexture[SPACESHIP_TYPES*7];
+    for (int i = 0; i < SPACESHIP_TYPES*7; i++)
+    {
+        Spaceshipstexture[i] = SDL_CreateTextureFromSurface(renderer , Spaceshipssurface[i]);
+        SDL_FreeSurface(Spaceshipssurface[i]);
+    }
+
+
+
+
+
     //variables
     int nations = 2;
     int planets = 5;
@@ -97,6 +124,7 @@ bool Menu_newgame (SDL_Renderer* renderer) {
 
     while (true)
     {
+        bool breakint = false;
         SDL_Event event;
         SDL_PollEvent(&event);
         //mouse handling
@@ -110,7 +138,9 @@ bool Menu_newgame (SDL_Renderer* renderer) {
         }
         if (event.button.button == SDL_BUTTON_RIGHT)
         {
-            blackingscreen(renderer);
+            if(!blackingscreen(renderer)){
+                    return false;
+            }
             break;
         }
         //key handling
@@ -203,18 +233,26 @@ bool Menu_newgame (SDL_Renderer* renderer) {
 
             case 9:{
                 if(Username[0] != '\0'){
-                    blackingscreen(renderer);
-                    if(!Game_start(renderer , nations+1 , planets , rand()%4 , spstype+1 , color+1 , Username , false , "")){
-                        //need some work here
+                    if(!blackingscreen(renderer)){
                         return false;
+                    }
+                    int k = Game_start(renderer , nations+1 , planets , rand()%4 , spstype , color+1 , Username , false , "");
+                    if(k == MNEG){
+                        
+                        return false;
+                    }
+                    else if(k == MPOS){
+                        
+                        breakint = true;
                     }
                 }
                 break;
             }
+            
             }
         }
 
-
+        if(breakint) break;
 
 
 
@@ -238,7 +276,8 @@ bool Menu_newgame (SDL_Renderer* renderer) {
         NG[3].y = (yzero+yzero+yone)/2 + 18 - NG[3].h/2;
 
         SDL_RenderCopy(renderer , ntex , NULL , &NG[2]);
-        SDL_RenderCopy(renderer , ptex , NULL , &NG[3]);      
+        SDL_RenderCopy(renderer , ptex , NULL , &NG[3]);
+        SDL_RenderCopy(renderer , Spaceshipstexture[7*spstype + color] , NULL , &NG[4]);
         
         SDL_DestroyTexture(ntex);
         SDL_DestroyTexture(ptex);
@@ -292,12 +331,18 @@ bool Menu_newgame (SDL_Renderer* renderer) {
     {
         SDL_DestroyTexture(arrowstex[i]);
     }
+    for (int i = 0; i < SPACESHIP_TYPES*7 ; i++){
+        SDL_DestroyTexture(Spaceshipstexture[i]);
+    }
     
     
     return true;
 }
 
-bool Menu_score (SDL_Renderer* renderer , char SCnames[10][NAME_MAX_L] , int SCscores[10]) {
+bool Menu_score (SDL_Renderer* renderer , char SCnames[SCsaves][NAME_MAX_L] , int SCscores[SCsaves]) {
+    int sorted[10];
+    SCsort(SCscores , sorted);
+    
     //font
     TTF_Font* Scoresfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 24);
 
@@ -310,9 +355,9 @@ bool Menu_score (SDL_Renderer* renderer , char SCnames[10][NAME_MAX_L] , int SCs
     SDL_Color textcolor = TEXT_COLOR;
     for (int i = 0; i < 10; i++)
     {
-        texttotexture(SCnames[i] , Scoresfont , textcolor , &tnames[i] , renderer);
+        texttotexture(SCnames[sorted[i]] , Scoresfont , textcolor , &tnames[i] , renderer);
         SDL_QueryTexture(tnames[i] , NULL , NULL , &(renames[i].w) , &(renames[i].h));
-        numbertotexture(SCscores[i] , Scoresfont , textcolor , &tscores[i] , renderer);
+        numbertotexture(SCscores[sorted[i]] , Scoresfont , textcolor , &tscores[i] , renderer);
         SDL_QueryTexture(tscores[i] , NULL , NULL , &(rescores[i].w) , &(rescores[i].h));
         renames[i].x = 300;
         renames[i].y = i*50 + 400;
@@ -337,7 +382,9 @@ bool Menu_score (SDL_Renderer* renderer , char SCnames[10][NAME_MAX_L] , int SCs
         }
         if (event.button.button == SDL_BUTTON_RIGHT)
         {
-            blackingscreen(renderer);
+            if(!blackingscreen(renderer)){
+                return false;
+            }
             break;
         }
         
