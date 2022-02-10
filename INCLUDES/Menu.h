@@ -118,7 +118,7 @@ bool Menu_main (SDL_Renderer* renderer){
             {
             case 1:
             {
-                if(Game_start(renderer , 4 , 10 , 2 , 1 , 1 , "MRB") == MNEG) {
+                if(Load_Game(renderer , "DATA/hello.txt") == MNEG) {
                     return false;
                 }
                 Exrtactingscore(SCnames , SCscores);

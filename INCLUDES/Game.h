@@ -432,6 +432,11 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
 
 
 
+        ///save
+        Savegame("DATA/hello.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
+        index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations ,
+        Planets , Spaceships , Attacks , username);
+
 
         //attack handeling
         for(int i = 0 ; i < ATTACK_MAX ; i++) Attack_handling(Attacks+i , &index_spaceships , Spaceships , Planetsdistances);
@@ -453,7 +458,9 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
         SDL_Delay(1000/60);
     }
     
-    Savegame("DATA/hello.txt" , howmanynations , howmanyplanets , howmanyvoidplanets ,index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations , Planets , Spaceships , Attacks);
+    Savegame("DATA/hello.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
+    index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations ,
+    Planets , Spaceships , Attacks , username);
 
 
 

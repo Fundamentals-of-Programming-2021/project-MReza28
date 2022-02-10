@@ -1,12 +1,26 @@
 #include "Main_includes.h"
 #include "Game.h"
 
-/*int Load_Game (SDL_Renderer* renderer , char* fileaddress) {
+int Load_Game (SDL_Renderer* renderer , char* fileaddress) {
     long long int counter = 1;
     int score;
     bool win;
     srand(time(0));
-    
+
+    FILE* Load = fopen(fileaddress , "r");
+    char username[NAME_MAX_L];
+    fscanf(Load , "%s" , username);
+
+    int howmanynations , howmanyplanets , howmanyvoidplanets , playercolor , playerspaceshiptype;
+    fscanf(Load , "%d %d %d %d %d" , 
+        &howmanynations ,
+        &howmanyplanets ,
+        &howmanyvoidplanets ,
+        &playercolor ,
+        &playerspaceshiptype
+    );
+
+
     //creating backgrounfd
     SDL_Texture* background;
     Creattexturefrompng("IMAGES/background.jpg" , &background , renderer);
@@ -14,14 +28,58 @@
     
     //creating nations
     struct Nation Nations[NATION_MAX];
-    /////Nation_alloc(Nations , howmanynations , playercolor);
+    for(int i = 0 ; i < NATION_MAX ; i++){
+        fscanf(Load , "%d %d %d %d %d %d %d\n" ,
+            &(Nations[i].alive) ,
+            &(Nations[i].armytexture) ,
+            &(Nations[i].color) ,
+            &(Nations[i].id) ,
+            &(Nations[i].name) ,
+            &(Nations[i].potion) ,
+            &(Nations[i].potiontime)
+        );
+    }
+
+
     char usernames[NAME_MAX][NAME_MAX_L] = {"you" , "LetMeMakeNewOne" , "mrb82228" , "Dream" , " DUDE0011" , "StrongAI" , "BOT05" , "YouShallDie" , "ARASH" , "HolyFatherJose"};
     strcpy(usernames[0] , username);
+
     Nations[1].armytexture = playerspaceshiptype;
 
     //creating planets
     struct Planet Planets[PLANET_MAX];
-    Planet_alloc(howmanyplanets , howmanynations , howmanyvoidplanets , Planets , Nations);
+    for(int i = 0 ; i < howmanyplanets + howmanyvoidplanets ; i++) {
+        int temp;
+        fscanf(Load , "%lf %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n" ,
+            &(Planets[i].angle) ,
+            &(Planets[i].id) ,
+            &temp , //(Planets[i].nation->id)
+
+            &(Planets[i].population) ,
+            &(Planets[i].typeoftexture) ,
+
+            &(Planets[i].x) ,
+            &(Planets[i].y) ,
+
+            &(Planets[i].rect.x) ,
+            &(Planets[i].rect.y) ,
+            &(Planets[i].rect.w) ,
+            &(Planets[i].rect.h) ,
+
+            &(Planets[i].poprect.x) ,
+            &(Planets[i].poprect.y) ,
+            
+            &(Planets[i].potrect.x) ,
+            &(Planets[i].potrect.y) ,
+
+            &(Planets[i].namrect.x) ,
+            &(Planets[i].namrect.y)
+        );
+        Planets[i].trigered = false;
+        Planets[i].mouseon = false;
+        (Planets[i].nation) = (Nations+temp);
+    }
+
 
     SDL_Surface* Planetssurfaces[PLANET_TYPES + PLANET_TYPES_V+ 1] = {
         IMG_Load("IMAGES/Planets/a1.png") , IMG_Load("IMAGES/Planets/a2.png") , IMG_Load("IMAGES/Planets/a3.png") , IMG_Load("IMAGES/Planets/a4.png") , IMG_Load("IMAGES/Planets/a5.png") , IMG_Load("IMAGES/Planets/a6.png") ,
@@ -53,12 +111,41 @@
     Planet_dis_finder_n(howmanyplanets , Planets , Planetsdistances);
     
     
-
     
     //creatin splaceships
     struct Spaceship Spaceships[SPACESHIP_MAX];
     int index_spaceships = 0;
     Spaceship_alloc(Spaceships);
+
+    fscanf(Load , "%d" , &index_spaceships);
+
+    for(int i = 0 ; i < index_spaceships ; i++){
+        int temp[3];
+        fscanf(Load , "%lf %d %d %d %d %d %d %d %d %d %d %d %d\n" ,
+            &(Spaceships[i].angle) ,
+            &(Spaceships[i].lifetime) ,
+
+            &temp[0] , //(Spaceships[i].start->id) ,
+            &temp[1] , //(Spaceships[i].end->id) ,
+            &temp[2] , //(Spaceships[i].nation->id) ,
+
+            &(Spaceships[i].pathlength) ,
+            &(Spaceships[i].typeoftexture) ,
+
+            &(Spaceships[i].rect.x) ,
+            &(Spaceships[i].rect.y) ,
+            &(Spaceships[i].rect.w) , 
+            &(Spaceships[i].rect.h) ,
+
+            &(Spaceships[i].x) ,
+            &(Spaceships[i].y)
+        );
+        Spaceships[i].moving = true;
+        Spaceships[i].nation = (Nations+temp[2]);
+        Spaceships[i].start = (Planets+temp[0]);
+        Spaceships[i].end = (Planets+temp[1]);
+    }
+
 
     SDL_Surface* Spaceshipssurface[SPACESHIP_TYPES*7] = {
         IMG_Load("IMAGES/Spaceships/1R.png") , IMG_Load("IMAGES/Spaceships/1B.png") , IMG_Load("IMAGES/Spaceships/1G.png") , IMG_Load("IMAGES/Spaceships/1Y.png") ,
@@ -76,14 +163,30 @@
     }
     
 
-
     
     //creating attacka
     struct Attack Attacks[ATTACK_MAX];
     int index_attacks = 0;
     Attack_alloc(Attacks);
 
-    
+    fscanf(Load , "%d" , &index_attacks);
+
+    for(int i = 0 ; i < index_attacks ; i++){
+        int temp[3];
+        fscanf(Load , "%d %d %d %d %d %d\n" ,
+            &temp[0] ,  //(Attacks[i].start->id) ,
+            &temp[1] ,  //(Attacks[i].end->id) ,
+            &temp[2] ,  //(Attacks[i].nation->id) ,
+            &(Attacks[i].population) ,
+            &(Attacks[i].countdown)
+        );
+        Attacks[i].attacking = true;
+        Attacks[i].nation = (Nations+temp[2]);
+        Attacks[i].start = (Planets+temp[0]);
+        Attacks[i].end = (Planets+temp[1]);
+    }
+
+    fclose(Load);
 
     //creating potins
     struct Potion Potions[POTION_MAX];
@@ -99,8 +202,6 @@
         Potionstexture[i] = SDL_CreateTextureFromSurface(renderer ,Potionssurface[i]);
         SDL_FreeSurface(Potionssurface[i]);
     }
-    
-
 
 
     //creatin fonts
@@ -313,9 +414,6 @@
 
         SDL_Delay(1000/60);
     }
-    
-    Savegame("DATA/hello.txt" , howmanynations , howmanyplanets , howmanyvoidplanets ,index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations , Planets , Spaceships , Attacks);
-
 
 
     //Destroying datas
@@ -380,4 +478,4 @@
     SDL_DestroyTexture(texttex);
     TTF_CloseFont(gamedonefont);
     return MPOS;
-}*/
+}

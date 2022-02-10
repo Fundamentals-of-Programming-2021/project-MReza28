@@ -78,50 +78,109 @@ void Savegame (
 
     fprintf(saveslot , "%s\n" , username);
 
-    fprintf(saveslot , "%d %d %d %d %d\n" , hnation , hplanet , hvplanet , playercolor , playerspaceshiptype);
+    fprintf(saveslot , "%d %d %d %d %d\n" ,
+        hnation , 
+        hplanet , 
+        hvplanet , 
+        playercolor , 
+        playerspaceshiptype
+    );
     
     for(int i = 0 ; i < NATION_MAX ; i++) {
         fprintf(saveslot , "%d %d %d %d %d %d %d\n" ,
-            (nations+i)->alive , (nations+i)->armytexture , (nations+i)->color , (nations+i)->id , (nations+i)->potion , (nations+i)->potiontime ,
-            (nations+i)->name
+            (nations+i)->alive ,
+            (nations+i)->armytexture ,
+            (nations+i)->color ,
+            (nations+i)->id ,
+            (nations+i)->name ,
+            (nations+i)->potion ,
+            (nations+i)->potiontime
         );
     }
 
     for(int i = 0 ; i < hplanet + hvplanet ; i++) {
-        fprintf(saveslot , "%lf %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n" ,
-            (planets+i)->angle , (planets+i)->id , (planets+i)->nation->id , 
-            (planets+i)->poprect.x , (planets+i)->poprect.y , (planets+i)->poprect.w , (planets+i)->poprect.h ,
-            (planets+i)->population , (planets+i)->rect.x , (planets+i)->rect.y , (planets+i)->rect.w , (planets+i)->rect.h ,
-            (planets+i)->typeoftexture , (planets+i)->x , (planets+i)->y , (planets+i)->potrect.x , (planets+i)->potrect.y ,
-            (planets+i)->namrect.x , (planets+i)->namrect.y
+        fprintf(saveslot , "%lf %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n" ,
+            (planets+i)->angle ,
+            (planets+i)->id ,
+            (planets+i)->nation->id ,
+
+            (planets+i)->population ,
+            (planets+i)->typeoftexture ,
+            
+            (planets+i)->x ,
+            (planets+i)->y ,
+            
+            (planets+i)->rect.x ,
+            (planets+i)->rect.y ,
+            (planets+i)->rect.w ,
+            (planets+i)->rect.h ,
+
+            (planets+i)->poprect.x ,
+            (planets+i)->poprect.y ,
+            
+            (planets+i)->potrect.x ,
+            (planets+i)->potrect.y ,
+
+            (planets+i)->namrect.x ,
+            (planets+i)->namrect.y
         );
     }
 
+
+    int howmanysps = 0;
+    for (int i = 0; i < SPACESHIP_MAX; i++)
+    {
+        if(spaceships[i].moving) howmanysps++;
+    }
+    fprintf(saveslot , "%d\n" , howmanysps);
+
+    
     for(int i = 0 ; i < SPACESHIP_MAX ; i++) {
         if( (spaceships+i)->moving ) 
         {
-            fprintf(saveslot , "%d %lf %d %d %d %d %d %d %d %d %d %d %d %d\n" ,
-                (spaceships+i)->angle , (spaceships+i)->end->id , (spaceships+i)->lifetime ,
-                (spaceships+i)->nation->id , (spaceships+i)->pathlength ,
-                (spaceships+i)->rect.x , (spaceships+i)->rect.y , (spaceships+i)->rect.w , (spaceships+i)->rect.h ,
-                (spaceships+i)->start->id , (spaceships+i)->typeoftexture , (spaceships+i)->x , (spaceships+i)->y
+            fprintf(saveslot , "%lf %d %d %d %d %d %d %d %d %d %d %d %d\n" ,
+                (spaceships+i)->angle ,
+                (spaceships+i)->lifetime ,
+                
+                (spaceships+i)->start->id ,
+                (spaceships+i)->end->id ,
+                (spaceships+i)->nation->id ,
+                
+                (spaceships+i)->pathlength ,
+                (spaceships+i)->typeoftexture ,
+                
+                (spaceships+i)->rect.x ,
+                (spaceships+i)->rect.y ,
+                (spaceships+i)->rect.w , 
+                (spaceships+i)->rect.h ,
+                
+                (spaceships+i)->x ,
+                (spaceships+i)->y
             );
         }
     }
     
-    fprintf(saveslot ,"%d\n" , 501);
+    
+    int hmattacks = 0;
+    for (int i = 0; i < ATTACK_MAX; i++)
+    {
+        if(attacks[i].attacking) hmattacks++;
+    }
+    fprintf(saveslot , "%d\n" , hmattacks);
+
 
     for (int i = 0 ; i < ATTACK_MAX ; i++)
     {
         if((attacks+i)->attacking){
             fprintf(saveslot , "%d %d %d %d %d %d\n" ,
-                i , (attacks+i)->countdown , (attacks+i)->end->id , (attacks+i)->nation->id ,
-                (attacks+i)->population , (attacks+i)->start->id
+                (attacks+i)->start->id ,
+                (attacks+i)->end->id ,
+                (attacks+i)->nation->id ,
+                (attacks+i)->population ,
+                (attacks+i)->countdown
             );
         }
     }
-
-    fprintf(saveslot ,"%d" , 502);
 
     fclose(saveslot);
 }

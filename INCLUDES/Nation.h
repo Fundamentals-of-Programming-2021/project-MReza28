@@ -43,7 +43,7 @@ void Nation_alloc (struct Nation* nations , int howmanynations , int basecolor) 
 
     (nations+1)->name = 0;
 
-    (nations + NATION_MAX - 1)->id = 0;
+    (nations + NATION_MAX - 1)->id = 5;
     (nations + NATION_MAX - 1)->name = -1;
     (nations + NATION_MAX - 1)->color = -1;
     (nations + NATION_MAX - 1)->armytexture = 0;
