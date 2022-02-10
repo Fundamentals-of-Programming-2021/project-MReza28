@@ -8,7 +8,7 @@
 #define POTION_LIFE (120000)
 #define POTION_PROB (30)
 #define Potion_SPSH_MIN_DIS (24)
-#define Potion_time (5)
+#define Potion_time (20)
 
 #define PLANET_MIN_DIS (300)
 #define SPACESHIP_MIN_DIS (24)

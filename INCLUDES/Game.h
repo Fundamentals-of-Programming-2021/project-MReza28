@@ -109,11 +109,31 @@ bool Game_done (char Username[NAME_MAX_L] , int score) {
     int scores[SCsaves];
     Exrtactingscore(names , scores);
 
-    for (int i = 1; i < scores[0]; i++)
+    int place;
+    for (int i = 1; i <= scores[0]; i++)
     {
-        
+        if(!strcmp(Username , names[i])){
+            place=i;
+            break;
+        }
+        place = 0;
     }
-    
+    FILE* fscores = fopen("DATA/scores/scores.txt" , "w");
+    if(place == 0) {
+        for(int i = 1 ; i <= scores[0] ;i++){
+            fprintf(fscores , "%s\n%d\n" , names[i] , scores[i]);
+        }
+        fprintf(fscores , "%s\n%d\n" , Username , score);
+        fprintf(fscores , "`");
+    }
+    else {
+        scores[place] += score;
+        for(int i = 1 ; i <= scores[0] ;i++){
+            fprintf(fscores , "%s\n%d\n" , names[i] , scores[i]);
+        }
+        fprintf(fscores , "`");
+    }
+    fclose(fscores);
 }
 
 //MNEG for quit aand MPOS for menu
@@ -161,7 +181,7 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
     //font colors
     SDL_Color colors[5] = {TEXT_COLOR , {255,0,0} , {0,150,255} , {0,255,0} , {255,255,0}};
 
-
+    
 
 
     //creating distances
@@ -222,6 +242,18 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
     //creatin fonts
     TTF_Font* Populationfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 20);
     TTF_Font* charfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 14);
+
+
+
+
+
+    //blackscreen
+    SDL_Rect blackleft;
+    blackleft.h = 1080;
+    blackleft.w = 1920;
+    blackleft.x = 0;
+    blackleft.y = 0;
+    int blackleftcount = 254;
 
 
 
@@ -390,11 +422,15 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
         //GAME ENDING
         if(!Nations[1].alive){
             win = false;
+            score = (howmanynations-5)*10;
+            Game_done(username , score);
             blackingscreen(renderer);
             break;
         }
         else if(!Nations[2].alive && !Nations[3].alive && !Nations[4].alive){
             win = true;
+            score = (howmanynations-1)*(20+ (20*1800)/counter);
+            Game_done(username , score);
             blackingscreen(renderer);
             break;
         }
@@ -441,5 +477,51 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
         SDL_DestroyTexture(Potionstexture[i]);
     }
 
-    return true;
+
+    //win or lose
+    TTF_Font* gamedonefont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 50);
+
+    SDL_Texture* numtex;
+    SDL_Texture* texttex;
+    SDL_Color textcolor = TEXT_COLOR;
+
+    numbertotexture(score , gamedonefont , textcolor , &numtex , renderer);
+    if(win) texttotexture("YOU WON" , gamedonefont , textcolor , &texttex , renderer);
+    else texttotexture("GAME OVER" , gamedonefont , textcolor , &texttex , renderer);
+
+    SDL_Rect scccc;
+    SDL_Rect title;
+
+    SDL_QueryTexture(numtex , NULL , NULL , &scccc.w , &scccc.h);
+    SDL_QueryTexture(texttex , NULL , NULL , &title.w , &title.h);
+
+    scccc.x = 960 - scccc.w/2;
+    scccc.y = 700;
+    title.x = 960 - title.w/2;
+    title.y = 400;
+
+    blackleftcount = 254;
+
+    while (blackleftcount > 0)
+    {
+        SDL_RenderClear(renderer);
+
+        SDL_RenderCopy(renderer , numtex , NULL , &scccc);
+        SDL_RenderCopy(renderer , texttex , NULL , &title);
+
+        //blackscreen
+        if(blackleftcount > -1){
+            Rectanglesetcolor(renderer , &blackleft , 0 , 0 , 0 , blackleftcount);
+            SDL_RenderCopy(renderer , NULL , NULL , &blackleft);
+            blackleftcount-=3;
+        }
+        SDL_RenderPresent(renderer);
+    }
+    SDL_Delay(2000);
+    blackingscreen(renderer);
+    
+    SDL_DestroyTexture(numtex);
+    SDL_DestroyTexture(texttex);
+    TTF_CloseFont(gamedonefont);
+    return MPOS;
 }
