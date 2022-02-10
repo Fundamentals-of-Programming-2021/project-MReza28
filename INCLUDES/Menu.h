@@ -120,7 +120,8 @@ bool Menu_main (SDL_Renderer* renderer){
             {
                 if(Game_start(renderer , 4 , 6 , 2 , 1 , 1 , "MRB" , false , "") == MNEG) {
                     return false;
-                }     
+                }
+                Exrtactingscore(SCnames , SCscores);
                 break;
             }
             
@@ -144,7 +145,7 @@ bool Menu_main (SDL_Renderer* renderer){
             {
                 if(!Menu_score(renderer , SCnames , SCscores)) {
                     return false;
-                }     
+                }
                 break;
             }
 
