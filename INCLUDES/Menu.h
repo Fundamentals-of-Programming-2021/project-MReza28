@@ -17,6 +17,7 @@ bool Menu_main (SDL_Renderer* renderer){
     struct Button bcontinue;
     struct Button bnewgame;
     struct Button bload;
+    struct Button bloadmap;
     struct Button bscores;
     struct Button bexit;
 
@@ -37,15 +38,20 @@ bool Menu_main (SDL_Renderer* renderer){
     Creattexturefrompng("IMAGES/Menu/blc.png" , textures+2 , renderer);
     Button_creat(&bload , 100 , 600 , textures);
 
+    Creattexturefrompng("IMAGES/Menu/blmt.png" , textures , renderer);
+    Creattexturefrompng("IMAGES/Menu/blmf.png" , textures+1 , renderer);
+    Creattexturefrompng("IMAGES/Menu/blmc.png" , textures+2 , renderer);
+    Button_creat(&bloadmap , 98 , 650 , textures);
+
     Creattexturefrompng("IMAGES/Menu/bst.png" , textures , renderer);
     Creattexturefrompng("IMAGES/Menu/bsf.png" , textures+1 , renderer);
     Creattexturefrompng("IMAGES/Menu/bsc.png" , textures+2 , renderer);
-    Button_creat(&bscores , 100 , 650 , textures);
+    Button_creat(&bscores , 100 , 700 , textures);
 
     Creattexturefrompng("IMAGES/Menu/bet.png" , textures , renderer);
     Creattexturefrompng("IMAGES/Menu/bef.png" , textures+1 , renderer);
     Creattexturefrompng("IMAGES/Menu/bec.png" , textures+2 , renderer);
-    Button_creat(&bexit , 100 , 850 , textures);
+    Button_creat(&bexit , 100 , 900 , textures);
 
 
 
@@ -103,6 +109,7 @@ bool Menu_main (SDL_Renderer* renderer){
         if(Button_mouseon(mousex , mousey , &bload)) mouseon = 3;
         if(Button_mouseon(mousex , mousey , &bscores)) mouseon = 4;
         if(Button_mouseon(mousex , mousey , &bexit)) mouseon = 5;
+        if(Button_mouseon(mousex , mousey , &bloadmap)) mouseon = 6;
         
         if(event.button.button == SDL_BUTTON_LEFT && event.type == SDL_MOUSEBUTTONDOWN){
             //blacking screen
@@ -118,7 +125,7 @@ bool Menu_main (SDL_Renderer* renderer){
             {
             case 1:
             {
-                if(Load_Game(renderer , "DATA/hello.txt") == MNEG) {
+                if(Load_Game(renderer , "DATA/continue/save.txt") == MNEG) {
                     return false;
                 }
                 Exrtactingscore(SCnames , SCscores);
@@ -133,19 +140,22 @@ bool Menu_main (SDL_Renderer* renderer){
                 break;
             }
             
-            /*case 3:
+            case 3:
             {
-                if(!Game_start(renderer , 4 , 9 , 2 , 1 , 2)) {
+                if(Load_Game(renderer , "DATA/games/save.txt") == MNEG) {
                     return false;
-                }     
+                }
+                Exrtactingscore(SCnames , SCscores);
                 break;
-            }*/
+            }
+            
 
             case 4:
             {
                 if(!Menu_score(renderer , SCnames , SCscores)) {
                     return false;
                 }
+                Exrtactingscore(SCnames , SCscores);
                 break;
             }
 
@@ -155,7 +165,11 @@ bool Menu_main (SDL_Renderer* renderer){
                 break;
             }
 
-            default:
+            case 6:
+                if(Load_Game(renderer , "DATA/maps/save.txt") == MNEG) {
+                    return false;
+                }
+                Exrtactingscore(SCnames , SCscores);
                 break;
             }
         }
@@ -169,6 +183,7 @@ bool Menu_main (SDL_Renderer* renderer){
         Button_render(&bload , renderer);
         Button_render(&bscores , renderer);
         Button_render(&bexit , renderer);
+        Button_render(&bloadmap , renderer);
 
         //blackscreen
         if(blackleftcount > -1){

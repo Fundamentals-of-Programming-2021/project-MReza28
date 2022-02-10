@@ -2,7 +2,7 @@
 #define PLANET_MAX (15)
 #define NATION_MAX (6)
 #define SPACESHIP_MAX (500)
-#define ATTACK_MAX (20)
+#define ATTACK_MAX (50)
 #define POTION_MAX (50)
 
 #define POTION_LIFE (120000)

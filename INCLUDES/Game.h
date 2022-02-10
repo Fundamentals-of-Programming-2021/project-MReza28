@@ -1,7 +1,7 @@
 #include "Main_includes.h"
 #include "Premenu.h"
 
-int Game_pause (SDL_Renderer* renderer , char Username[NAME_MAX_L] , int score) {
+int Game_pause (SDL_Renderer* renderer , char Username[NAME_MAX_L] , int score , int* savedataaa) {
     SDL_Texture* arrowstex[9];
     Creattexturefrompng("IMAGES/Game/smt.png" , arrowstex+0 , renderer);
     Creattexturefrompng("IMAGES/Game/smf.png" , arrowstex+1 , renderer);
@@ -30,6 +30,7 @@ int Game_pause (SDL_Renderer* renderer , char Username[NAME_MAX_L] , int score) 
 
     while (true)
     {
+        int breakk =0;
         SDL_Event event;
         SDL_PollEvent(&event);
         //mouse handling
@@ -60,12 +61,20 @@ int Game_pause (SDL_Renderer* renderer , char Username[NAME_MAX_L] , int score) 
             switch (mouseon)
             {
             case 1:{
-                //save map
+                *savedataaa = 2;
+                if(!blackingscreen(renderer)){
+                    return MNEG;
+                }
+                breakk = 1;
                 break;
             }
             
             case 2:{
-                //save game
+                *savedataaa = 1;
+                if(!blackingscreen(renderer)){
+                    return MNEG;
+                }
+                breakk = 1;
                 break;
             }
             
@@ -81,6 +90,10 @@ int Game_pause (SDL_Renderer* renderer , char Username[NAME_MAX_L] , int score) 
             }
 
             }
+        }
+
+        if(breakk){
+            break;
         }
 
 
@@ -140,12 +153,21 @@ bool Game_done (char Username[NAME_MAX_L] , int score) {
 int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets , int playerspaceshiptype , int playercolor , char* username) {
     long long int counter = 1;
     int score;
+    int savedataa = 0;
     bool win;
     srand(time(0));
     
     //creating backgrounfd
     SDL_Texture* background;
     Creattexturefrompng("IMAGES/background.jpg" , &background , renderer);
+
+    //blackscreen
+    SDL_Rect blackleft;
+    blackleft.h = 1080;
+    blackleft.w = 1920;
+    blackleft.x = 0;
+    blackleft.y = 0;
+    int blackleftcount = 254;
     
     
     //creating nations
@@ -245,16 +267,9 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
 
 
 
-
-
-    //blackscreen
-    SDL_Rect blackleft;
-    blackleft.h = 1080;
-    blackleft.w = 1920;
-    blackleft.x = 0;
-    blackleft.y = 0;
-    int blackleftcount = 254;
-
+    Savegame("DATA/maps/savetemp.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
+    index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations ,
+    Planets , Spaceships , Attacks , username);
 
 
 
@@ -298,7 +313,8 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
                 if(!blackingscreen(renderer)){
                     return MNEG;
                 }
-                int k = Game_pause(renderer , username , score);
+                blackleftcount=254;
+                int k = Game_pause(renderer , username , score , &savedataa);
                 if(k == 0){
                     TTF_CloseFont(Populationfont);
                     TTF_CloseFont(charfont);
@@ -385,10 +401,36 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
         for (int i = 1; i < 5; i++)
         {
             if(Nations[i].population == 0){
-                Nations[i].alive = false;
+                for (int j = 0; j < howmanyplanets; j++)
+                {
+                    if(Planets[j].nation->id == Nations[i].id){
+                        break;
+                    }
+                    Nations[i].alive = false;
+                }
+                
             }
         }
         
+        //////////////////////////////AI
+        srand(50*counter);
+        //choosing a planet
+        int a = 0;
+        while(true){
+            a = rand()%howmanyplanets;
+            if(Planets[a].nation->id > 1 && Planets->nation->alive){
+                break;
+            }
+        }
+        //choosing destination
+        for (int i = 0; i < howmanyplanets; i++)
+        {
+            if(Planets[i].nation->id == 0 && Planets[i].population < Planets[a].population){
+                Attack_creat(Attacks+index_attacks , Planets+a , Planets+i);
+                index_attacks++;
+                break;
+            }
+        }
         
 
 
@@ -433,9 +475,31 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
 
 
         ///save
-        Savegame("DATA/hello.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
+        Savegame("DATA/continue/save.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
         index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations ,
         Planets , Spaceships , Attacks , username);
+
+        if(savedataa==1){
+            Savegame("DATA/games/save.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
+            index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations ,
+            Planets , Spaceships , Attacks , username);
+            savedataa =0;
+        }
+        else if (savedataa==2){
+            FILE* f1 = fopen("DATA/maps/savetemp.txt" , "r");
+            FILE* f2 = fopen("DATA/maps/save.txt" , "w");
+
+            char c = getc(f1);
+            while (c != EOF)
+            {
+                putc(c , f2);
+                c = getc(f1);
+            }
+            
+
+            fclose(f1);
+            fclose(f2);
+        }
 
 
         //attack handeling
@@ -451,6 +515,12 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
 
         Planet_render_n(Planets , renderer , Planetstextures , howmanyplanets+howmanyvoidplanets , Populationfont , charfont , colors , usernames);
 
+        //blackscreen
+        if(blackleftcount > -1){
+            Rectanglesetcolor(renderer , &blackleft , 0 , 0 , 0 , blackleftcount);
+            SDL_RenderCopy(renderer , NULL , NULL , &blackleft);
+            blackleftcount-=3;
+        }
 
         SDL_RenderPresent(renderer);
         counter++;
@@ -458,9 +528,6 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
         SDL_Delay(1000/60);
     }
     
-    Savegame("DATA/hello.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
-    index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations ,
-    Planets , Spaceships , Attacks , username);
 
 
 

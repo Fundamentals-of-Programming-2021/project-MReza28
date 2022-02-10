@@ -4,6 +4,7 @@
 int Load_Game (SDL_Renderer* renderer , char* fileaddress) {
     long long int counter = 1;
     int score;
+    int savedataa = 0;
     bool win;
     srand(time(0));
 
@@ -209,7 +210,9 @@ int Load_Game (SDL_Renderer* renderer , char* fileaddress) {
     TTF_Font* charfont = TTF_OpenFont("IMAGES/Fonts/calibri.ttf" , 14);
 
 
-
+    Savegame("DATA/maps/savetemp.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
+    index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations ,
+    Planets , Spaceships , Attacks , username);
 
 
     //blackscreen
@@ -260,7 +263,8 @@ int Load_Game (SDL_Renderer* renderer , char* fileaddress) {
                 if(!blackingscreen(renderer)){
                     return MNEG;
                 }
-                int k = Game_pause(renderer , username , score);
+                blackleftcount = 254;
+                int k = Game_pause(renderer , username , score , &savedataa);
                 if(k == 0){
                     TTF_CloseFont(Populationfont);
                     TTF_CloseFont(charfont);
@@ -393,6 +397,34 @@ int Load_Game (SDL_Renderer* renderer , char* fileaddress) {
         }
 
 
+        ///save
+        Savegame("DATA/continue/save.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
+        index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations ,
+        Planets , Spaceships , Attacks , username);
+
+
+        if(savedataa==1){
+            Savegame("DATA/games/save.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
+            index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations ,
+            Planets , Spaceships , Attacks , username);
+            savedataa =0;
+        }
+        else if (savedataa==2){
+            FILE* f1 = fopen("DATA/maps/savetemp.txt" , "r");
+            FILE* f2 = fopen("DATA/maps/save.txt" , "w");
+
+            char c = getc(f1);
+            while (c != EOF)
+            {
+                putc(c , f2);
+                c = getc(f1);
+            }
+            
+
+            fclose(f1);
+            fclose(f2);
+        }
+
 
 
         //attack handeling
@@ -408,6 +440,12 @@ int Load_Game (SDL_Renderer* renderer , char* fileaddress) {
 
         Planet_render_n(Planets , renderer , Planetstextures , howmanyplanets+howmanyvoidplanets , Populationfont , charfont , colors , usernames);
 
+        //blackscreen
+        if(blackleftcount > -1){
+            Rectanglesetcolor(renderer , &blackleft , 0 , 0 , 0 , blackleftcount);
+            SDL_RenderCopy(renderer , NULL , NULL , &blackleft);
+            blackleftcount-=3;
+        }
 
         SDL_RenderPresent(renderer);
         counter++;

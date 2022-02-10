@@ -236,7 +236,7 @@ bool Menu_newgame (SDL_Renderer* renderer) {
                     if(!blackingscreen(renderer)){
                         return false;
                     }
-                    int k = Game_start(renderer , nations+1 , planets , rand()%4 , spstype , color+1 , Username);
+                    int k = Game_start(renderer , nations+1 , planets , 0 , spstype , color+1 , Username);
                     if(k == MNEG){
                         
                         return false;
