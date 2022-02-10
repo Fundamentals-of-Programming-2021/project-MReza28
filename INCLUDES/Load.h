@@ -1,143 +1,7 @@
 #include "Main_includes.h"
-#include "Premenu.h"
+#include "Game.h"
 
-int Game_pause (SDL_Renderer* renderer , char Username[NAME_MAX_L] , int score) {
-    SDL_Texture* arrowstex[9];
-    Creattexturefrompng("IMAGES/Game/smt.png" , arrowstex+0 , renderer);
-    Creattexturefrompng("IMAGES/Game/smf.png" , arrowstex+1 , renderer);
-    Creattexturefrompng("IMAGES/Game/smc.png" , arrowstex+2 , renderer);
-
-    Creattexturefrompng("IMAGES/Game/sgt.png" , arrowstex+3 , renderer);
-    Creattexturefrompng("IMAGES/Game/sgf.png" , arrowstex+4 , renderer);
-    Creattexturefrompng("IMAGES/Game/sgc.png" , arrowstex+5 , renderer);
-
-    Creattexturefrompng("IMAGES/Game/mmt.png" , arrowstex+6 , renderer);
-    Creattexturefrompng("IMAGES/Game/mmf.png" , arrowstex+7 , renderer);
-    Creattexturefrompng("IMAGES/Game/mmc.png" , arrowstex+8 , renderer);
-
-    struct Button pause[3];
-    Button_creat(pause , 960-210/2 , 500 , arrowstex);
-    Button_creat(pause+1 , 960-242/2 , 600 , arrowstex+3);
-    Button_creat(pause+2 , 960-252/2 , 700 , arrowstex+6);
-
-    //blackscreen
-    SDL_Rect blackleft;
-    blackleft.h = 1080;
-    blackleft.w = 1920;
-    blackleft.x = 0;
-    blackleft.y = 0;
-    int blackleftcount = 254;
-
-    while (true)
-    {
-        SDL_Event event;
-        SDL_PollEvent(&event);
-        //mouse handling
-        int mousex , mousey;
-        Uint32 mouseb; 
-        mouseb = SDL_GetMouseState(&mousex , &mousey);
-
-        int mouseon = 0;
-        for(int i = 0 ; i < 3 ; i++){
-            if(Button_mouseon(mousex , mousey , pause+i)) mouseon = i+1;
-        }
-
-        if(event.type == SDL_QUIT){
-            return MNEG;
-        }
-        if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_RIGHT)
-        {
-            if(!blackingscreen(renderer)){
-                    return MNEG;
-            }
-            for(int i = 0 ; i < 9 ; i++){
-                SDL_DestroyTexture(arrowstex[i]);
-            }
-            return 1;
-            break;
-        }
-        else if(event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT){
-            switch (mouseon)
-            {
-            case 1:{
-                //save map
-                break;
-            }
-            
-            case 2:{
-                //save game
-                break;
-            }
-            
-            case 3:{
-                if(!blackingscreen(renderer)){
-                    return MNEG;
-                }
-                for(int i = 0 ; i < 9 ; i++){
-                    SDL_DestroyTexture(arrowstex[i]);
-                }
-                return 0;
-                break;
-            }
-
-            }
-        }
-
-
-        SDL_RenderClear(renderer);
-
-        for (int i = 0; i < 3; i++)
-        {
-            Button_render(pause+i , renderer);
-        }
-
-        //blackscreen
-        if(blackleftcount > -1){
-            Rectanglesetcolor(renderer , &blackleft , 0 , 0 , 0 , blackleftcount);
-            SDL_RenderCopy(renderer , NULL , NULL , &blackleft);
-            blackleftcount-=3;
-        }
-
-        SDL_RenderPresent(renderer);
-    }
-
-    return true;
-}
-
-bool Game_done (char Username[NAME_MAX_L] , int score) {
-    char names[SCsaves][NAME_MAX_L];
-    int scores[SCsaves];
-    Exrtactingscore(names , scores);
-
-    int place;
-    for (int i = 1; i <= scores[0]; i++)
-    {
-        if(!strcmp(Username , names[i])){
-            place=i;
-            break;
-        }
-        place = 0;
-    }
-    FILE* fscores = fopen("DATA/scores/scores.txt" , "w");
-    if(place == 0) {
-        for(int i = 1 ; i <= scores[0] ;i++){
-            fprintf(fscores , "%s\n%d\n" , names[i] , scores[i]);
-        }
-        fprintf(fscores , "%s\n%d\n" , Username , score);
-        fprintf(fscores , "`");
-    }
-    else {
-        scores[place] += score;
-        for(int i = 1 ; i <= scores[0] ;i++){
-            fprintf(fscores , "%s\n%d\n" , names[i] , scores[i]);
-        }
-        fprintf(fscores , "`");
-    }
-    fclose(fscores);
-}
-
-//MNEG for quit aand MPOS for menu
-int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets , int howmanyvoidplanets , int playerspaceshiptype , int playercolor , char* username) {
+/*int Load_Game (SDL_Renderer* renderer , char* fileaddress) {
     long long int counter = 1;
     int score;
     bool win;
@@ -150,7 +14,7 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
     
     //creating nations
     struct Nation Nations[NATION_MAX];
-    Nation_alloc(Nations , howmanynations , playercolor);
+    /////Nation_alloc(Nations , howmanynations , playercolor);
     char usernames[NAME_MAX][NAME_MAX_L] = {"you" , "LetMeMakeNewOne" , "mrb82228" , "Dream" , " DUDE0011" , "StrongAI" , "BOT05" , "YouShallDie" , "ARASH" , "HolyFatherJose"};
     strcpy(usernames[0] , username);
     Nations[1].armytexture = playerspaceshiptype;
@@ -254,9 +118,6 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
     blackleft.x = 0;
     blackleft.y = 0;
     int blackleftcount = 254;
-
-
-
 
     while (true)
     {
@@ -519,4 +380,4 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
     SDL_DestroyTexture(texttex);
     TTF_CloseFont(gamedonefont);
     return MPOS;
-}
+}*/

@@ -118,7 +118,7 @@ bool Menu_main (SDL_Renderer* renderer){
             {
             case 1:
             {
-                if(Game_start(renderer , 4 , 6 , 2 , 1 , 1 , "MRB" , false , "") == MNEG) {
+                if(Game_start(renderer , 4 , 10 , 2 , 1 , 1 , "MRB") == MNEG) {
                     return false;
                 }
                 Exrtactingscore(SCnames , SCscores);
@@ -135,7 +135,7 @@ bool Menu_main (SDL_Renderer* renderer){
             
             /*case 3:
             {
-                if(!Game_start(renderer , 4 , 9 , 2 , 1 , 2 , true , "DATA/hello.txt")) {
+                if(!Game_start(renderer , 4 , 9 , 2 , 1 , 2)) {
                     return false;
                 }     
                 break;

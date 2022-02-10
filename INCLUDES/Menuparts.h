@@ -1,5 +1,5 @@
 #include "Main_includes.h"
-#include "Game.h"
+#include "Load.h"
 
 bool Menu_continue (SDL_Renderer* renderer) {
     
@@ -236,7 +236,7 @@ bool Menu_newgame (SDL_Renderer* renderer) {
                     if(!blackingscreen(renderer)){
                         return false;
                     }
-                    int k = Game_start(renderer , nations+1 , planets , rand()%4 , spstype , color+1 , Username , false , "");
+                    int k = Game_start(renderer , nations+1 , planets , rand()%4 , spstype , color+1 , Username);
                     if(k == MNEG){
                         
                         return false;

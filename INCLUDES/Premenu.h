@@ -71,23 +71,29 @@ bool blackingscreen (SDL_Renderer* renderer){
 void Savegame (
     char* fileadress , int hnation , int hplanet , int hvplanet , int sindex , int aindex ,
     int playercolor ,int playerspaceshiptype , struct Nation* nations ,
-    struct Planet* planets , struct Spaceship* spaceships , struct Attack* attacks
+    struct Planet* planets , struct Spaceship* spaceships , struct Attack* attacks , char* username
 )
 {
     FILE* saveslot = fopen(fileadress , "w");
+
+    fprintf(saveslot , "%s\n" , username);
+
     fprintf(saveslot , "%d %d %d %d %d\n" , hnation , hplanet , hvplanet , playercolor , playerspaceshiptype);
-    fprintf(saveslot , "%d %d\n" , sindex , aindex );
     
     for(int i = 0 ; i < NATION_MAX ; i++) {
-        fprintf(saveslot , "%d %d %d %d %d %d\n" , (nations+i)->alive , (nations+i)->armytexture , (nations+i)->color , (nations+i)->id , (nations+i)->potion , (nations+i)->potiontime);
+        fprintf(saveslot , "%d %d %d %d %d %d %d\n" ,
+            (nations+i)->alive , (nations+i)->armytexture , (nations+i)->color , (nations+i)->id , (nations+i)->potion , (nations+i)->potiontime ,
+            (nations+i)->name
+        );
     }
 
     for(int i = 0 ; i < hplanet + hvplanet ; i++) {
-        fprintf(saveslot , "%lf %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n" ,
-            (planets+i)->angle , (planets+i)->id /*, (planets+i)->mouseon */, (planets+i)->nation->id , 
+        fprintf(saveslot , "%lf %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n" ,
+            (planets+i)->angle , (planets+i)->id , (planets+i)->nation->id , 
             (planets+i)->poprect.x , (planets+i)->poprect.y , (planets+i)->poprect.w , (planets+i)->poprect.h ,
             (planets+i)->population , (planets+i)->rect.x , (planets+i)->rect.y , (planets+i)->rect.w , (planets+i)->rect.h ,
-            /*(planets+i)->trigered ,*/ (planets+i)->typeoftexture , (planets+i)->x , (planets+i)->y
+            (planets+i)->typeoftexture , (planets+i)->x , (planets+i)->y , (planets+i)->potrect.x , (planets+i)->potrect.y ,
+            (planets+i)->namrect.x , (planets+i)->namrect.y
         );
     }
 
@@ -95,7 +101,7 @@ void Savegame (
         if( (spaceships+i)->moving ) 
         {
             fprintf(saveslot , "%d %lf %d %d %d %d %d %d %d %d %d %d %d %d\n" ,
-                i , (spaceships+i)->angle , (spaceships+i)->end->id , (spaceships+i)->lifetime ,
+                (spaceships+i)->angle , (spaceships+i)->end->id , (spaceships+i)->lifetime ,
                 (spaceships+i)->nation->id , (spaceships+i)->pathlength ,
                 (spaceships+i)->rect.x , (spaceships+i)->rect.y , (spaceships+i)->rect.w , (spaceships+i)->rect.h ,
                 (spaceships+i)->start->id , (spaceships+i)->typeoftexture , (spaceships+i)->x , (spaceships+i)->y
@@ -117,72 +123,6 @@ void Savegame (
 
     fprintf(saveslot ,"%d" , 502);
 
-    fclose(saveslot);
-}
-
-void Loadgame (
-    char* fileadress , int* hnation , int* hplanet , int* hvplanet , int* sindex , int* aindex ,
-    int* playercolor ,int* playerspaceshiptype , struct Nation* nations ,
-    struct Planet* planets , struct Spaceship* spaceships , struct Attack* attacks
-    )
-{
-    FILE* saveslot = fopen(fileadress , "r");
-    fscanf(saveslot , "%d %d %d %d %d" , hnation , hplanet , hvplanet , playercolor , playerspaceshiptype);
-    fscanf(saveslot , "%d %d" , sindex , aindex );
-
-    for(int i = 0 ; i < NATION_MAX ; i++) {
-        fscanf(saveslot , "%d %d %d %d %d %d" , &((nations+i)->alive) , &((nations+i)->armytexture) , &((nations+i)->color) , &((nations+i)->id) , &((nations+i)->potion) , &((nations+i)->potiontime));
-    }
-
-    for(int i = 0 ; i < *hplanet + *hvplanet ; i++) {
-        int tempnation;
-        fscanf(saveslot , "%lf %d %d %d %d %d %d %d %d %d %d %d %d %d %d" ,
-            &(planets+i)->angle , &(planets+i)->id , /*&(planets+i)->mouseon ,*/ &tempnation , 
-            &((planets+i)->poprect.x) , &(planets+i)->poprect.y , &(planets+i)->poprect.w , &(planets+i)->poprect.h ,
-            &((planets+i)->population) , &(planets+i)->rect.x , &(planets+i)->rect.y , &(planets+i)->rect.w , &(planets+i)->rect.h ,
-            /*&(planets+i)->trigered ,*/ &(planets+i)->typeoftexture , &(planets+i)->x , &(planets+i)->y
-        );
-        (planets+i)->nation = (nations+tempnation);
-    }
-
-    while(true) {
-        int i;
-        fscanf(saveslot , "%d" , &i);
-        if(i==501) break;
-
-        int startid , endid , nationid;
-
-        fscanf(saveslot , "%f %d %d %d %d %d %d %d %d %d %d %d %d" ,
-                &(spaceships+i)->angle , &endid , &(spaceships+i)->lifetime ,
-                &nationid , &(spaceships+i)->pathlength ,
-                &(spaceships+i)->rect.x , &(spaceships+i)->rect.y , &(spaceships+i)->rect.w , &(spaceships+i)->rect.h ,
-                &startid , &(spaceships+i)->typeoftexture , &(spaceships+i)->x , &(spaceships+i)->y
-        );
-        (spaceships+i)->start = planets+startid;
-        (spaceships+i)->end = planets+endid;
-        (spaceships+i)->nation = nations+nationid;
-        (spaceships+i)->moving = true;
-    }
-    
-    while (true)
-    {
-        int i;
-        fscanf(saveslot , "%d" , &i);
-        if(i==502) break;
-
-        int startid , endid , nationid;
-        if((attacks+i)->attacking){
-            fscanf(saveslot , "%d %d %d %d %d" ,
-                &((attacks+i)->countdown) , &endid , &nationid ,
-                &((attacks+i)->population) , &startid
-            );
-        }
-        (attacks+i)->start = planets+startid;
-        (attacks+i)->end = planets+endid;
-        (attacks+i)->nation = nations+nationid;
-        (attacks+i)->attacking = true;
-    }
-    
     fclose(saveslot);
 }
 
