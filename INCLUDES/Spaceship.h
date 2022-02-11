@@ -81,16 +81,19 @@ void Spaceship_movement (struct Spaceship* obj , SDL_Renderer* renderer , SDL_Te
             if(obj->end->population == 0){
                 (obj->end->population)++;
                 obj->end->nation = obj->nation;
+                obj->end->trigered = false;
             }
             else{
                 if(obj->nation->potion == 3){
                     if(obj->end->population == 0){
                         (obj->end->population)++;
                         obj->end->nation = obj->nation;
+                        obj->end->trigered = false;
                     }
                     else if(obj->end->population == 1){
                         (obj->end->population)--;
                         obj->end->nation = obj->nation;
+                        obj->end->trigered = false;
                     }
                     else{
                         (obj->end->population)-=2;

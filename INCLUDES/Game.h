@@ -419,59 +419,66 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
             //choosing a planet
             int a = 0;
             int k = 0;
-            while(true){
+            for(int i = 0 ; i < 50 ; i++){
                 a = rand()%howmanyplanets;
-                if(Planets[a].nation->id > 1 && Planets->nation->alive == true){
+                if(Planets[a].nation->id > 1 && Planets[a].nation->alive == true){
                     break;
                 }
+                a=-1;
             }
             //choosing destination
-            for (int i = 0; i < howmanyplanets; i++)
-            {
-                k = rand()%howmanyplanets;
-                
-                if(Planets[(i+k)%howmanyplanets].nation->id == 0 && Planets[(i+k)%howmanyplanets].population < Planets[a].population){
-                    Attack_creat(Attacks+index_attacks , Planets+a , Planets+(i+k)%howmanyplanets);
-                    index_attacks++;
-                    index_attacks%=ATTACK_MAX;
-                    break;
+            if(a != -1) {
+                for (int i = 0; i < howmanyplanets; i++)
+                {
+                    k = rand()%howmanyplanets;
+                    
+                    if(Planets[(i+k)%howmanyplanets].nation->id == 0 && Planets[(i+k)%howmanyplanets].population < Planets[a].population){
+                        Attack_creat(Attacks+index_attacks , Planets+a , Planets+(i+k)%howmanyplanets);
+                        index_attacks++;
+                        index_attacks%=ATTACK_MAX;
+                        break;
+                    }
                 }
             }
-
             
             //defense
-            while(true){
+            for(int i = 0 ; i < 50 ; i++){
                 a = rand()%howmanyplanets;
-                if(Planets[a].nation->id > 1 && Planets->nation->alive == true){
+                if(Planets[a].nation->id > 1 && Planets[a].nation->alive == true){
                     break;
                 }
+                a=-1;
             }
-            for(int i = 0 ; i < howmanyplanets ; i++){
-                k = rand()%howmanyplanets;
-                
-                if(Planets[(k+i)%howmanyplanets].nation->id == Planets[a].nation->id && Planets[(k+i)%howmanyplanets].population < 5 && a!=(k+i)%howmanyplanets){
-                    Attack_creat(Attacks+index_attacks , Planets+a , Planets + (k+i)%howmanyplanets);
-                    index_attacks++;
-                    index_attacks%=ATTACK_MAX;
-                    break;
+            if(a != -1){
+                for(int i = 0 ; i < howmanyplanets ; i++){
+                    k = rand()%howmanyplanets;
+                    
+                    if(Planets[(k+i)%howmanyplanets].nation->id == Planets[a].nation->id && Planets[(k+i)%howmanyplanets].population < 5 && a!=(k+i)%howmanyplanets){
+                        Attack_creat(Attacks+index_attacks , Planets+a , Planets + (k+i)%howmanyplanets);
+                        index_attacks++;
+                        index_attacks%=ATTACK_MAX;
+                        break;
+                    }
                 }
             }
 
             //attack others
-            while(true){
+            for(int i = 0 ; i < 50 ; i++){
                 a = rand()%howmanyplanets;
-                if(Planets[a].nation->id > 1 && Planets->nation->alive == true){
+                if(Planets[a].nation->id > 1 && Planets[a].nation->alive == true){
                     break;
                 }
             }
-            for(int i = 0 ; i < howmanyplanets ; i++){
-                k = rand()%howmanyplanets;
-                
-                if(Planets[(k+i)%howmanyplanets].nation->id != Planets[a].nation->id && Planets[(k+i)%howmanyplanets].population < Planets[a].population + 10 && a!=(k+i)%howmanyplanets){
-                    Attack_creat(Attacks+index_attacks , Planets+a , Planets + (k+i)%howmanyplanets);
-                    index_attacks++;
-                    index_attacks%=ATTACK_MAX;
-                    break;
+            if(a != -1){
+                for(int i = 0 ; i < howmanyplanets ; i++){
+                    k = rand()%howmanyplanets;
+                    
+                    if(Planets[(k+i)%howmanyplanets].nation->id != Planets[a].nation->id && Planets[(k+i)%howmanyplanets].population < Planets[a].population + 10 && a!=(k+i)%howmanyplanets){
+                        Attack_creat(Attacks+index_attacks , Planets+a , Planets + (k+i)%howmanyplanets);
+                        index_attacks++;
+                        index_attacks%=ATTACK_MAX;
+                        break;
+                    }
                 }
             }
 
