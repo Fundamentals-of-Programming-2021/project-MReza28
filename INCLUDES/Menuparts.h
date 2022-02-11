@@ -172,13 +172,15 @@ bool Menu_newgame (SDL_Renderer* renderer) {
             
             case 1:{
                 nations++;
-                nations%=4;
+                if(nations>3){
+                    nations = 1;
+                }
                 break;
             }
 
             case 2:{
                 nations--;
-                if(nations<0){
+                if(nations<1){
                     nations=3;
                 }
                 if(nations+1 > planets) {

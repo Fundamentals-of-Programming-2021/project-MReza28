@@ -412,13 +412,14 @@ int Game_start (SDL_Renderer* renderer , int howmanynations , int howmanyplanets
             }
         }
         
+
         //////////////////////////////AI
         srand(50*counter);
         //choosing a planet
         int a = 0;
         while(true){
             a = rand()%howmanyplanets;
-            if(Planets[a].nation->id > 1 && Planets->nation->alive){
+            if(Planets[a].nation->id > 1 && Planets->nation->alive == true){
                 break;
             }
         }
