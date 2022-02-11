@@ -57,17 +57,9 @@ bool Menu_main (SDL_Renderer* renderer){
 
     //creat black rects
     SDL_Rect blackleft;
-    blackleft.h = 500;
-    blackleft.w = 300;
-    blackleft.x = 100;
-    blackleft.y = 500;
     int blackleftcount = 254;
 
     SDL_Rect blackup;
-    blackup.h = 400;
-    blackup.w = 1000;
-    blackup.x = 500;
-    blackup.y = 50;
     int blackupcount = -1;
 
 
@@ -80,7 +72,15 @@ bool Menu_main (SDL_Renderer* renderer){
     int SCscores[10];
     Exrtactingscore(SCnames , SCscores);
 
+    blackup.h = 400;
+    blackup.w = 1000;
+    blackup.x = 500;
+    blackup.y = 50;
 
+    blackleft.h = 500;
+    blackleft.w = 300;
+    blackleft.x = 100;
+    blackleft.y = 500;
     //extracting continue
 
 
@@ -172,6 +172,16 @@ bool Menu_main (SDL_Renderer* renderer){
                 Exrtactingscore(SCnames , SCscores);
                 break;
             }
+
+                blackup.h = 400;
+                blackup.w = 1000;
+                blackup.x = 500;
+                blackup.y = 50;
+
+                blackleft.h = 500;
+                blackleft.w = 300;
+                blackleft.x = 100;
+                blackleft.y = 500;
         }
         
         SDL_RenderClear(renderer);
