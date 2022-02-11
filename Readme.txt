@@ -11,6 +11,7 @@ HOWTOPLAY:
 	dakhel safhe new game hatman bayad baraye vorood be bazi name karbari vared beshe
 	adad samt chap tedad keshvar ha va adda samt rast tedad sayyare ha
 
+	baraye dorost boodan andaze bazi ro safhe, hatman saafhe 1080 be bala bashe va zoometoon ham kam konid va biarid rooye 100
 
 Sources:
 
