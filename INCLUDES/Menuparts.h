@@ -19,7 +19,7 @@ bool Menu_newgame (SDL_Renderer* renderer) {
 
 
     //rects
-    SDL_Rect NG[5];
+    SDL_Rect NG[7];
     //username
     NG[0].y = 200;
     //username text upper
@@ -34,6 +34,17 @@ bool Menu_newgame (SDL_Renderer* renderer) {
     NG[4].y = 320+200 - NG[4].w/2;
     NG[4].x = 960 - NG[4].w/2;
 
+    SDL_Texture* nationstex;
+    SDL_Texture* planetstex;
+    texttotexture("NATIONS" , Maintext , Textcolor , &nationstex , renderer);
+    texttotexture("PLANETS" , Maintext , Textcolor , &planetstex , renderer);
+
+
+    SDL_QueryTexture(nationstex , NULL , NULL , &NG[5].w , &NG[5].h);
+    SDL_QueryTexture(planetstex , NULL , NULL , &NG[6].w , &NG[6].h);
+
+    NG[5].x = 480 - NG[5].w/2;
+    NG[6].x = 480 + 960 - NG[6].w/2;
 
 
     
@@ -274,11 +285,20 @@ bool Menu_newgame (SDL_Renderer* renderer) {
         SDL_QueryTexture(ptex , NULL , NULL , &NG[3].w , &NG[3].h);
         NG[2].x = 480 - NG[2].w/2;
         NG[3].x = 960+480 - NG[3].w/2;
-        NG[2].y = (yzero+yzero+yone)/2 + 18 - NG[2].h/2;
-        NG[3].y = (yzero+yzero+yone)/2 + 18 - NG[3].h/2;
+        NG[2].y = (yzero+yzero+yone)/2 + 18 - NG[2].h/2 - 50;
+        NG[3].y = (yzero+yzero+yone)/2 + 18 - NG[3].h/2 - 50;
+
+        NG[5].y = (yzero+yzero+yone)/2 + 18 - NG[5].h/2 + 50;
+        NG[6].y = (yzero+yzero+yone)/2 + 18 - NG[6].h/2 + 50;
 
         SDL_RenderCopy(renderer , ntex , NULL , &NG[2]);
         SDL_RenderCopy(renderer , ptex , NULL , &NG[3]);
+        
+        SDL_RenderCopy(renderer , nationstex , NULL , &NG[5]);
+        SDL_RenderCopy(renderer , planetstex , NULL , &NG[6]);
+        
+
+
         SDL_RenderCopy(renderer , Spaceshipstexture[7*spstype + color] , NULL , &NG[4]);
         
         SDL_DestroyTexture(ntex);
@@ -337,6 +357,8 @@ bool Menu_newgame (SDL_Renderer* renderer) {
         SDL_DestroyTexture(Spaceshipstexture[i]);
     }
     
+    SDL_DestroyTexture(nationstex);
+    SDL_DestroyTexture(planetstex);
     
     return true;
 }
@@ -415,6 +437,7 @@ bool Menu_score (SDL_Renderer* renderer , char SCnames[SCsaves][NAME_MAX_L] , in
         SDL_DestroyTexture(tscores[i]);
     }
     TTF_CloseFont(Scoresfont);
+
 
     return true;
 }
