@@ -37,8 +37,8 @@
 #define PLANET_MAX_R (100)
 
 //Main Game Borders
-#define GAME_H_S (200)
-#define GAME_H_E (980)
+#define GAME_H_S (120)
+#define GAME_H_E (900)
 #define GAME_W_S (100)
 #define GAME_W_E (1820)
 

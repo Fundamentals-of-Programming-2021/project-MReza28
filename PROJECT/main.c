@@ -39,9 +39,9 @@ int main (int argc, char *argv[]) {
     
     TTF_Init();
 
-    /*if(Running){
+    if(Running){
         Running = Menu_start(rend);
-    }*/
+    }
 
     if(Running){
         Running = Menu_main(rend);

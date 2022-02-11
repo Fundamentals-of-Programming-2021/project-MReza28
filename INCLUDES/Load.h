@@ -351,12 +351,103 @@ int Load_Game (SDL_Renderer* renderer , char* fileaddress) {
         for (int i = 1; i < 5; i++)
         {
             if(Nations[i].population == 0){
-                Nations[i].alive = false;
+                for (int j = 0; j < howmanyplanets; j++)
+                {
+                    if(Planets[j].nation->id == Nations[i].id){
+                        break;
+                    }
+                    Nations[i].alive = false;
+                }
+                
             }
         }
         
         
+        //////////////////////////////AI
+        if(counter%30==0){
+            //attacking white planets
+            //choosing a planet
+            int a = 0;
+            int k = 0;
+            while(true){
+                a = rand()%howmanyplanets;
+                if(Planets[a].nation->id > 1 && Planets->nation->alive == true){
+                    break;
+                }
+            }
+            //choosing destination
+            for (int i = 0; i < howmanyplanets; i++)
+            {
+                k = rand()%howmanyplanets;
+                
+                if(Planets[(i+k)%howmanyplanets].nation->id == 0 && Planets[(i+k)%howmanyplanets].population < Planets[a].population){
+                    Attack_creat(Attacks+index_attacks , Planets+a , Planets+(i+k)%howmanyplanets);
+                    index_attacks++;
+                    index_attacks%=ATTACK_MAX;
+                    break;
+                }
+            }
 
+            
+            //defense
+            while(true){
+                a = rand()%howmanyplanets;
+                if(Planets[a].nation->id > 1 && Planets->nation->alive == true){
+                    break;
+                }
+            }
+            for(int i = 0 ; i < howmanyplanets ; i++){
+                k = rand()%howmanyplanets;
+                
+                if(Planets[(k+i)%howmanyplanets].nation->id == Planets[a].nation->id && Planets[(k+i)%howmanyplanets].population < 5 && a!=(k+i)%howmanyplanets){
+                    Attack_creat(Attacks+index_attacks , Planets+a , Planets + (k+i)%howmanyplanets);
+                    index_attacks++;
+                    index_attacks%=ATTACK_MAX;
+                    break;
+                }
+            }
+
+            //attack others
+            while(true){
+                a = rand()%howmanyplanets;
+                if(Planets[a].nation->id > 1 && Planets->nation->alive == true){
+                    break;
+                }
+            }
+            for(int i = 0 ; i < howmanyplanets ; i++){
+                k = rand()%howmanyplanets;
+                
+                if(Planets[(k+i)%howmanyplanets].nation->id != Planets[a].nation->id && Planets[(k+i)%howmanyplanets].population < Planets[a].population + 10 && a!=(k+i)%howmanyplanets){
+                    Attack_creat(Attacks+index_attacks , Planets+a , Planets + (k+i)%howmanyplanets);
+                    index_attacks++;
+                    index_attacks%=ATTACK_MAX;
+                    break;
+                }
+            }
+
+            //population cab
+            for (int i = 0; i < howmanyplanets; i++)
+            {
+                k = rand()%howmanyplanets;
+                if(Planets[i].population >= 50 && k != i && Planets[i].nation->id != 1){
+                    Attack_creat(Attacks+index_attacks , Planets+a , Planets + (k+i)%howmanyplanets);
+                    index_attacks++;
+                    index_attacks%=ATTACK_MAX;
+                }
+            }
+            
+            /*for (int i = 0; i < howmanyplanets; i++)
+            {
+                a = rand()%howmanyplanets;
+                k = rand()%howmanyplanets;
+                if(Planets[(a+i)%howmanyplanets].population == 0 && (a+i)%howmanyplanets!=k && Planets[(a+i)%howmanyplanets].nation->id!=1) {
+                    Attack_creat(Attacks+index_attacks , Planets+k , Planets + (a+i)%howmanyplanets);
+                    index_attacks++;
+                    index_attacks%=ATTACK_MAX;
+                    break;
+                }
+            }*/
+        }
 
 
         //handelinh potions
@@ -398,7 +489,7 @@ int Load_Game (SDL_Renderer* renderer , char* fileaddress) {
 
 
         ///save
-        Savegame("DATA/continue/save.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
+        if(counter%60==0) Savegame("DATA/continue/save.txt" , howmanynations , howmanyplanets , howmanyvoidplanets , 
         index_spaceships , index_attacks , playercolor , playerspaceshiptype , Nations ,
         Planets , Spaceships , Attacks , username);
 
